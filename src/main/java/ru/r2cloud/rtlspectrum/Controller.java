@@ -96,6 +96,7 @@ public class Controller implements Initializable {
 		lineChart.setLegendVisible(false);
 		lineChart.setAnimated(false);
 		lineChart.setCreateSymbols(false);
+		lineChart.getData().clear();
 		lineChart.getData().add(series);
 		lineChart.setVisible(true);
 	}

@@ -17,7 +17,8 @@
 			<menus>
 				<Menu text="File">
 					<items>
-						<MenuItem text="Load..." />
+						<MenuItem text="Run now" onAction="#runNow" />
+						<MenuItem text="Load..." onAction="#loadFile" />
 					</items>
 				</Menu>
 			</menus>
@@ -26,12 +27,12 @@
 	<center>
 		<StackPane>
 			<children>
-				<LineChartWithMarkers fx:id="lineChart" visible="false">
+				<LineChartWithMarkers fx:id="lineChart" visible="false" horizontalZeroLineVisible="false">
 		             <xAxis>
-		               <NumberAxis label="Frequency" fx:id="xAxis" />
+		               <NumberAxis label="Frequency" />
 		             </xAxis>
 		             <yAxis>
-		               <NumberAxis label="Power" side="LEFT" fx:id="yAxis" />
+		               <NumberAxis label="Power" side="LEFT" />
 		             </yAxis>
 				</LineChartWithMarkers>
 				<VBox fx:id="welcomeMessage" spacing="8" maxWidth="400" style="-fx-padding: 100px 0 0 0">
@@ -40,8 +41,8 @@
 					<Label text="1. Run now. Make sure rtl_sdr is attached and rtl_power command available in $PATH" wrapText="true" />
 					<Label text="2. Analyze previously collected results. Collect results using the command: rtl_power -f 24M:1.7G:1M -g 1 -1 noise.csv . Load noise.csv file using the button below." wrapText="true" />
 					<HBox spacing="8">
-						<Button text="Run now" onAction="#runNow" fx:id="runNow" />
-						<Button text="Load file..." onAction="#loadFile" fx:id="loadFile" />
+						<Button text="Run now" onAction="#runNow" />
+						<Button text="Load file..." onAction="#loadFile" />
 					</HBox>
 				</VBox>
 			</children>
