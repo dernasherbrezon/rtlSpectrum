@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.chart.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml"
+	fx:controller="ru.r2cloud.rtlspectrum.StatusBar"
+	style=" -fx-border-color:grey; -fx-border-width: 1; -fx-border-style: solid none none none; -fx-padding: 4">
+	<children>
+		<Label fx:id="statusMessage" text="OK"/>
+		<Region HBox.hgrow="ALWAYS" />
+		<ProgressBar fx:id="progressBar" progress="-1" visible="false"/>
+	</children>
+</HBox>

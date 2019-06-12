@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.chart.*?>
+<?import ru.r2cloud.rtlspectrum.LineChartWithMarkers?>
+
+<BorderPane fx:id="borderPane"
+	xmlns:fx="http://javafx.com/fxml"
+	fx:controller="ru.r2cloud.rtlspectrum.Controller">
+	<top>
+		<MenuBar useSystemMenuBar="true">
+			<menus>
+				<Menu text="File">
+					<items>
+						<MenuItem text="Load..." />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<StackPane>
+			<children>
+				<LineChartWithMarkers fx:id="lineChart" visible="false">
+		             <xAxis>
+		               <NumberAxis label="Frequency" fx:id="xAxis" />
+		             </xAxis>
+		             <yAxis>
+		               <NumberAxis label="Power" side="LEFT" fx:id="yAxis" />
+		             </yAxis>
+				</LineChartWithMarkers>
+				<VBox fx:id="welcomeMessage" spacing="8" maxWidth="400" style="-fx-padding: 100px 0 0 0">
+					<Label text="Getting started" style="-fx-font: bold 16pt Arial;"/>
+					<Label text="You can analyze spectrum by running rtl_power using the button below or load .csv file with already collected results" wrapText="true" />
+					<Label text="1. Run now. Make sure rtl_sdr is attached and rtl_power command available in $PATH" wrapText="true" />
+					<Label text="2. Analyze previously collected results. Collect results using the command: rtl_power -f 24M:1.7G:1M -g 1 -1 noise.csv . Load noise.csv file using the button below." wrapText="true" />
+					<HBox spacing="8">
+						<Button text="Run now" onAction="#runNow" fx:id="runNow" />
+						<Button text="Load file..." onAction="#loadFile" fx:id="loadFile" />
+					</HBox>
+				</VBox>
+			</children>
+		</StackPane>
+	</center>
+	<bottom>
+		<fx:include source="statusBar.fxml" fx:id="statusBar" />
+	</bottom>
+</BorderPane>
