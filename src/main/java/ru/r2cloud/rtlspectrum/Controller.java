@@ -54,7 +54,7 @@ public class Controller implements Initializable {
 			setupChart(result);
 		});
 		rtlPowerTask.setOnFailed((workerStateEvent) -> {
-			statusBarController.completeTask(rtlPowerTask.getException().getMessage());
+			statusBarController.completeTask("Error: " + rtlPowerTask.getException().getMessage());
 		});
 
 		executorService.execute(rtlPowerTask);
@@ -81,7 +81,7 @@ public class Controller implements Initializable {
 			setupChart(result);
 		});
 		readTask.setOnFailed((workerStateEvent) -> {
-			statusBarController.completeTask(readTask.getException().getMessage());
+			statusBarController.completeTask("Error: " + readTask.getException().getMessage());
 		});
 
 		executorService.execute(readTask);
