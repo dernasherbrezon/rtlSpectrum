@@ -17,8 +17,8 @@
 			<menus>
 				<Menu text="File">
 					<items>
-						<MenuItem text="Run now" onAction="#runNow" />
-						<MenuItem text="Load..." onAction="#loadFile" />
+						<MenuItem text="Run now" onAction="#runNow" fx:id="runNowMenu" />
+						<MenuItem text="Load..." onAction="#loadFile" fx:id="loadFileMenu" />
 					</items>
 				</Menu>
 			</menus>
@@ -41,8 +41,8 @@
 					<Label text="1. Run now. Make sure rtl_sdr is attached and rtl_power command available in $PATH" wrapText="true" />
 					<Label text="2. Analyze previously collected results. Collect results using the command: rtl_power -f 24M:1.7G:1M -g 1 -1 noise.csv . Load noise.csv file using the button below." wrapText="true" />
 					<HBox spacing="8">
-						<Button text="Run now" onAction="#runNow" />
-						<Button text="Load file..." onAction="#loadFile" />
+						<Button text="Run now" onAction="#runNow" fx:id="runNowButton" />
+						<Button text="Load file..." onAction="#loadFile" fx:id="loadFileButton" />
 					</HBox>
 				</VBox>
 			</children>

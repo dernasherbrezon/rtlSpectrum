@@ -12,6 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -30,6 +32,15 @@ public class Controller implements Initializable {
 	@FXML
 	private StatusBar statusBarController;
 
+	@FXML
+	private Button runNowButton;
+	@FXML
+	private Button loadFileButton;
+	@FXML
+	private MenuItem loadFileMenu;
+	@FXML
+	private MenuItem runNowMenu;
+
 	private ExecutorService executorService;
 	private RunRtlPower rtlPowerTask;
 
@@ -46,15 +57,19 @@ public class Controller implements Initializable {
 		rtlPowerTask.setOnRunning((succeesesEvent) -> {
 			statusBarController.beginTask("Running rtl_power");
 		});
+		
+		disableButtons(true);
 
 		rtlPowerTask.setOnSucceeded((succeededEvent) -> {
 			List<XYChart.Data<Number, Number>> result = rtlPowerTask.getValue();
 			statusBarController.completeTask();
 			welcomeMessage.setVisible(false);
+			disableButtons(false);
 			setupChart(result);
 		});
 		rtlPowerTask.setOnFailed((workerStateEvent) -> {
 			statusBarController.completeTask("Error: " + rtlPowerTask.getException().getMessage());
+			disableButtons(false);
 		});
 
 		executorService.execute(rtlPowerTask);
@@ -70,6 +85,8 @@ public class Controller implements Initializable {
 			return;
 		}
 
+		disableButtons(true);
+		
 		ReadFromFile readTask = new ReadFromFile(statusBarController, selectedFile);
 		readTask.setOnRunning((succeesesEvent) -> {
 			statusBarController.beginTask("Reading file: " + selectedFile.getAbsolutePath());
@@ -78,9 +95,11 @@ public class Controller implements Initializable {
 			List<XYChart.Data<Number, Number>> result = readTask.getValue();
 			statusBarController.completeTask();
 			welcomeMessage.setVisible(false);
+			disableButtons(false);
 			setupChart(result);
 		});
 		readTask.setOnFailed((workerStateEvent) -> {
+			disableButtons(false);
 			statusBarController.completeTask("Error: " + readTask.getException().getMessage());
 		});
 
@@ -99,6 +118,13 @@ public class Controller implements Initializable {
 		lineChart.getData().clear();
 		lineChart.getData().add(series);
 		lineChart.setVisible(true);
+	}
+
+	private void disableButtons(boolean value) {
+		runNowButton.setDisable(value);
+		loadFileButton.setDisable(value);
+		loadFileMenu.setDisable(value);
+		runNowMenu.setDisable(value);
 	}
 
 	public void stop() {

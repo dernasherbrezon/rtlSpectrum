@@ -45,9 +45,13 @@ public class RunRtlPower extends StatusBarTask<List<XYChart.Data<Number, Number>
 				if (curLine.startsWith("usb_claim_interface")) {
 					throw new IllegalStateException(curLine);
 				}
+				if (curLine.startsWith("stdbuf:")) {
+					throw new IllegalStateException(curLine);
+				}
 				if (isCancelled()) {
 					break;
 				}
+				System.out.println(curLine);
 			}
 		}
 		return result;
