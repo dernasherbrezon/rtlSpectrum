@@ -46,18 +46,19 @@ public class Controller implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		executorService = Executors.newFixedThreadPool(1);
+		executorService = Executors.newFixedThreadPool(2);
 		((NumberAxis) lineChart.getXAxis()).setTickLabelFormatter(new FrequencyFormatter());
 		((NumberAxis) lineChart.getYAxis()).setTickLabelFormatter(new PowerFormatter());
 	}
 
 	@FXML
 	public void runNow() {
-		rtlPowerTask = new RunRtlPower(statusBarController);
+		RtlPowerProgress progressTask = new RtlPowerProgress(statusBarController);
+		rtlPowerTask = new RunRtlPower(progressTask);
 		rtlPowerTask.setOnRunning((succeesesEvent) -> {
-			statusBarController.beginTask("Running rtl_power");
+			statusBarController.beginTask();
 		});
-		
+
 		disableButtons(true);
 
 		rtlPowerTask.setOnSucceeded((succeededEvent) -> {
@@ -68,11 +69,13 @@ public class Controller implements Initializable {
 			setupChart(result);
 		});
 		rtlPowerTask.setOnFailed((workerStateEvent) -> {
+			progressTask.cancel(true);
 			statusBarController.completeTask("Error: " + rtlPowerTask.getException().getMessage());
 			disableButtons(false);
 		});
 
 		executorService.execute(rtlPowerTask);
+		executorService.execute(progressTask);
 	}
 
 	@FXML
@@ -86,10 +89,10 @@ public class Controller implements Initializable {
 		}
 
 		disableButtons(true);
-		
+
 		ReadFromFile readTask = new ReadFromFile(statusBarController, selectedFile);
 		readTask.setOnRunning((succeesesEvent) -> {
-			statusBarController.beginTask("Reading file: " + selectedFile.getAbsolutePath());
+			statusBarController.beginTask();
 		});
 		readTask.setOnSucceeded((succeededEvent) -> {
 			List<XYChart.Data<Number, Number>> result = readTask.getValue();

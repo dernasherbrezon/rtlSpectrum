@@ -22,6 +22,7 @@ public class ReadFromFile extends StatusBarTask<List<XYChart.Data<Number, Number
 
 	@Override
 	protected List<XYChart.Data<Number, Number>> call() throws Exception {
+		updateMessage("Reading file: " + file.getAbsolutePath());
 		long minimum = 24_000_000;
 		long maximum = 1_700_000_000;
 		ArrayList<XYChart.Data<Number, Number>> result = new ArrayList<>();
@@ -37,7 +38,7 @@ public class ReadFromFile extends StatusBarTask<List<XYChart.Data<Number, Number
 	}
 
 	// format is: 2019-06-07, 19:44:45, 40000000, 41000000, 1000000.00, 1, -24.22, -24.22
-	private static XYChart.Data<Number, Number> parse(String line) {
+	static XYChart.Data<Number, Number> parse(String line) {
 		String[] parts = COMMA.split(line);
 		XYChart.Data<Number, Number> result = new XYChart.Data<>();
 		result.setXValue(Long.valueOf(parts[2].trim()));

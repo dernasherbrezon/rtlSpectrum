@@ -5,26 +5,32 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import javafx.concurrent.Task;
 import javafx.scene.chart.XYChart;
 
-public class RunRtlPower extends StatusBarTask<List<XYChart.Data<Number, Number>>> {
+public class RunRtlPower extends Task<List<XYChart.Data<Number, Number>>> {
+
+	static final long MINIMUM_FREQ = 24_000_000;
+	static final long MAXIMUM_FREQ = 1_700_000_000;
+	static final long STEP = 1_000_000;
+	static final long NUMBER_OF_SECONDS = TimeUnit.MINUTES.toSeconds(2);
 
 	private static final Pattern SPACE = Pattern.compile("\\s");
 
 	private Process process;
+	private final RtlPowerProgress progressTask;
 
-	public RunRtlPower(StatusBar statusBar) {
-		super(statusBar);
+	public RunRtlPower(RtlPowerProgress progressTask) {
+		this.progressTask = progressTask;
 	}
 
 	@Override
 	protected List<XYChart.Data<Number, Number>> call() throws Exception {
-		long minimum = 24_000_000;
-		long maximum = 1_700_000_000;
-		long step = 1_000_000;
-		ProcessBuilder processBuilder = new ProcessBuilder(SPACE.split("/usr/local/opt/coreutils/libexec/gnubin/stdbuf -i 0 -o 0 -e 0 rtl_power -f " + minimum + ":" + maximum + ":" + step + " -g 1 -1 -"));
+		updateMessage("Running rtl_power");
+		ProcessBuilder processBuilder = new ProcessBuilder(SPACE.split("rtl_power -f " + MINIMUM_FREQ + ":" + MAXIMUM_FREQ + ":" + STEP + " -i " + NUMBER_OF_SECONDS + " -g 45 -1 -"));
 		process = processBuilder.start();
 		String curLine = null;
 		ArrayList<XYChart.Data<Number, Number>> result = new ArrayList<>();
@@ -33,8 +39,8 @@ public class RunRtlPower extends StatusBarTask<List<XYChart.Data<Number, Number>
 				if (isCancelled()) {
 					break;
 				}
-				System.out.println(curLine);
-				// FIXME
+				XYChart.Data<Number, Number> cur = ReadFromFile.parse(curLine);
+				result.add(cur);
 			}
 		}
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getErrorStream(), StandardCharsets.ISO_8859_1))) {
@@ -51,9 +57,9 @@ public class RunRtlPower extends StatusBarTask<List<XYChart.Data<Number, Number>
 				if (isCancelled()) {
 					break;
 				}
-				System.out.println(curLine);
 			}
 		}
+		progressTask.cancel(true);
 		return result;
 	}
 

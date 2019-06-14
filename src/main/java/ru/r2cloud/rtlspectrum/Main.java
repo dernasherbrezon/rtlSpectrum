@@ -2,6 +2,7 @@ package ru.r2cloud.rtlspectrum;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,12 @@ public class Main extends Application {
 		}
 
 		Scene scene = new Scene(root, 640, 480);
+		String osName = System.getProperty("os.name");
+		if (osName != null && osName.toLowerCase(Locale.UK).contains("mac")) {
+			if (MacOsUtil.isDark()) {
+				scene.getStylesheets().add("dark.css");
+			}
+		}
 		stage.setScene(scene);
 		stage.setTitle("rtlSpectrum");
 		stage.show();

@@ -1,6 +1,7 @@
 package ru.r2cloud.rtlspectrum;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -14,8 +15,7 @@ public class StatusBar {
 
 	private double previousValue = -1;
 
-	public void beginTask(String message) {
-		statusMessage.setText(message);
+	public void beginTask() {
 		progressBar.setVisible(true);
 	}
 
@@ -24,10 +24,11 @@ public class StatusBar {
 	}
 
 	public void completeTask(String message) {
+		statusMessage.textProperty().unbind();
 		if (message != null) {
-			statusMessage.setText(message);
+			statusMessage.textProperty().set(message);
 		} else {
-			statusMessage.setText("OK");
+			statusMessage.textProperty().set("OK");
 		}
 		progressBar.setVisible(false);
 		previousValue = -1;
@@ -37,5 +38,9 @@ public class StatusBar {
 
 	public DoubleProperty progressProperty() {
 		return progressBar.progressProperty();
+	}
+
+	public StringProperty messageProperty() {
+		return statusMessage.textProperty();
 	}
 }
