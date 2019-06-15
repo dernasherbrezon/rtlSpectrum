@@ -22,7 +22,7 @@ deploy:
   provider: releases
   api_key:
     secure: "MNGozZ9E3+CXgsTH1L+RyPrUBXM4KTQrCipAziZX1T0Ri+YTozAwdUcdpJWvU6hHK0tp7dhxYkuXc9DUF+6gB59QLr6eszRIVMmoF5S/RafFYjHgloPRQ6Ts1RY/4Imo5LNsePIgTXcVEpk4R9hwjJKQweH/Yvup9yAYjBplwwB0f9A0ymjagvzN1lBXn6qQDtLRWvDtAmb4efiOYfxqr6FPVASDpQqRtEz4fwR3pujNPaWQ0WCz7hSxqxfrxyJien6U77TCERj9v77uwBkyi1lOaf05WmAyew6LT6PR2QGNMAICKjiofFiXx2MmX2kF3xM+QjJp+EzZLpZNCpO8jrMvNmU97W+9Y5b9vgbEpEX0OkBl/rwkB3cfLLDViO0SgqbrUv+INjzDsAKjeXPfheboa4+ihlLhAQvyTlQmvcTzLNZULuHrqbygK+wR0qPoeBi7Oyq/KCLGrj2Av4USeN5X0Sc/ijEKelBnv91s6vd0Bc6tOmFJ/GHt0ONhNbWqXzzKzS2ILemQpR9U/obhLa2re3tdXLvYWLfDnK7SqpLdlcgXVmkBAUUQHbWib+339d9lValeK3/KEnLLqClV+LJ85w97mxKSnXgsxxJ86TgQS2SOd1x20SpyaypA1X6aJHc8J/PCbcTvB5U75TMKTPIncz56PDa91GsT+dBz4Lw="
-  file: "./target/rtlSpectrum-*.jar"
+  file: "target/rtlSpectrum.jar"
   skip_cleanup: true
   on:
     tags: true
