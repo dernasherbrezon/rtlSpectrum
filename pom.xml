@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ru.r2cloud</groupId>
 	<artifactId>rtlSpectrum</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<inceptionYear>2019</inceptionYear>
 	<name>rtlSpectrum</name>
 	<description>Analyze spectrograms created by rtl_power</description>
@@ -83,7 +83,7 @@
 		<url>https://github.com/dernasherbrezon/rtlSpectrum</url>
 		<connection>scm:git:git@github.com/dernasherbrezon/rtlSpectrum.git</connection>
 		<developerConnection>scm:git:https://github.com/dernasherbrezon/rtlSpectrum.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>rtlSpectrum-1.2</tag>
 	</scm>
 
 	<issueManagement>
