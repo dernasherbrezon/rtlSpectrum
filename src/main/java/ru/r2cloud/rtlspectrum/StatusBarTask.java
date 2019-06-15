@@ -7,7 +7,7 @@ import javafx.concurrent.Task;
 
 public abstract class StatusBarTask<V> extends Task<V> {
 
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("mm'm':ss's'");
+	private final SimpleDateFormat sdf = new SimpleDateFormat("mm'm':ss's'");
 	protected final StatusBar statusBar;
 
 	public StatusBarTask(StatusBar statusBar) {
@@ -21,7 +21,7 @@ public abstract class StatusBarTask<V> extends Task<V> {
 		updateProgress(workDone, max);
 	}
 	
-	public static String formatETA(long time) {
+	public String formatETA(long time) {
 		return sdf.format(new Date(time));
 	}
 }

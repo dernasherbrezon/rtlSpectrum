@@ -156,11 +156,13 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 		} else {
 			textValue = xValue.toString();
 		}
-		textValue += "\n";
-		if (yConverter != null) {
-			textValue += yConverter.toString(yValue);
-		} else {
-			textValue += yValue.toString();
+		if (yValue != null) {
+			textValue += "\n";
+			if (yConverter != null) {
+				textValue += yConverter.toString(yValue);
+			} else {
+				textValue += yValue.toString();
+			}
 		}
 		return textValue.trim();
 	}

@@ -13,8 +13,6 @@ public class StatusBar {
 	@FXML
 	private Label statusMessage;
 
-	private double previousValue = -1;
-
 	public void beginTask() {
 		progressBar.setVisible(true);
 	}
@@ -31,9 +29,8 @@ public class StatusBar {
 			statusMessage.textProperty().set("OK");
 		}
 		progressBar.setVisible(false);
-		previousValue = -1;
 		progressBar.progressProperty().unbind();
-		progressBar.progressProperty().set(previousValue);
+		progressBar.progressProperty().set(-1);
 	}
 
 	public DoubleProperty progressProperty() {

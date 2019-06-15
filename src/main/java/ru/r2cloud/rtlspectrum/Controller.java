@@ -55,20 +55,18 @@ public class Controller implements Initializable {
 	public void runNow() {
 		RtlPowerProgress progressTask = new RtlPowerProgress(statusBarController);
 		rtlPowerTask = new RunRtlPower(progressTask);
-		rtlPowerTask.setOnRunning((succeesesEvent) -> {
-			statusBarController.beginTask();
-		});
+		rtlPowerTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
 
 		disableButtons(true);
 
-		rtlPowerTask.setOnSucceeded((succeededEvent) -> {
+		rtlPowerTask.setOnSucceeded(succeededEvent -> {
 			List<XYChart.Data<Number, Number>> result = rtlPowerTask.getValue();
 			statusBarController.completeTask();
 			welcomeMessage.setVisible(false);
 			disableButtons(false);
 			setupChart(result);
 		});
-		rtlPowerTask.setOnFailed((workerStateEvent) -> {
+		rtlPowerTask.setOnFailed(workerStateEvent -> {
 			progressTask.cancel(true);
 			statusBarController.completeTask("Error: " + rtlPowerTask.getException().getMessage());
 			disableButtons(false);
@@ -91,17 +89,15 @@ public class Controller implements Initializable {
 		disableButtons(true);
 
 		ReadFromFile readTask = new ReadFromFile(statusBarController, selectedFile);
-		readTask.setOnRunning((succeesesEvent) -> {
-			statusBarController.beginTask();
-		});
-		readTask.setOnSucceeded((succeededEvent) -> {
+		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		readTask.setOnSucceeded(succeededEvent -> {
 			List<XYChart.Data<Number, Number>> result = readTask.getValue();
 			statusBarController.completeTask();
 			welcomeMessage.setVisible(false);
 			disableButtons(false);
 			setupChart(result);
 		});
-		readTask.setOnFailed((workerStateEvent) -> {
+		readTask.setOnFailed(workerStateEvent -> {
 			disableButtons(false);
 			statusBarController.completeTask("Error: " + readTask.getException().getMessage());
 		});
@@ -111,7 +107,6 @@ public class Controller implements Initializable {
 
 	private void setupChart(List<XYChart.Data<Number, Number>> data) {
 		XYChart.Series<Number, Number> series = new XYChart.Series<>();
-		// series.setName("Spectrum");
 		for (XYChart.Data<Number, Number> cur : data) {
 			series.getData().add(cur);
 		}

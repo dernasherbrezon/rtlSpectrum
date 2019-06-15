@@ -22,15 +22,13 @@ public class Main extends Application {
 			root = fxmlLoader.load(is);
 			controller = fxmlLoader.getController();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 
 		Scene scene = new Scene(root, 640, 480);
 		String osName = System.getProperty("os.name");
-		if (osName != null && osName.toLowerCase(Locale.UK).contains("mac")) {
-			if (MacOsUtil.isDark()) {
-				scene.getStylesheets().add("dark.css");
-			}
+		if (osName != null && osName.toLowerCase(Locale.UK).contains("mac") && MacOsUtil.isDark()) {
+			scene.getStylesheets().add("dark.css");
 		}
 		stage.setScene(scene);
 		stage.setTitle("rtlSpectrum");
