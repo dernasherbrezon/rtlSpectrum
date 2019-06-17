@@ -15,6 +15,7 @@ public class RtlPowerProgress extends StatusBarTask<Void> {
 			updateProgress("Running rtl_power ETA: " + formatETA((numberOfSeconds - i) * 1000), i, numberOfSeconds);
 			Thread.sleep(1000);
 		}
+		updateProgress("Running rtl_power ETA: almost done", -1, -1);
 		return null;
 	}
 
