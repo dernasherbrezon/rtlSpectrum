@@ -20,7 +20,16 @@
 					<items>
 						<MenuItem text="Run now" onAction="#runNow" fx:id="runNowMenu" />
 						<MenuItem text="Load file..." onAction="#loadFile" fx:id="loadFileMenu" />
+						<MenuItem text="Add file..." onAction="#addFile" fx:id="addFileMenu" />
+						<SeparatorMenuItem/>
 						<MenuItem text="Save" onAction="#save" fx:id="saveMenu" disable="${lineChart.noData}" accelerator="Shortcut+S"/>
+					</items>
+				</Menu>
+				<Menu text="Edit">
+					<items>
+						<MenuItem text="Subtract file..." onAction="#subtractFile" fx:id="subtractFileMenu" />
+						<SeparatorMenuItem/>
+						<MenuItem text="Clear" onAction="#clearChart" />
 					</items>
 				</Menu>
 			</menus>

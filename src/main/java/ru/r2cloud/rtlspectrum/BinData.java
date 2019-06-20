@@ -12,13 +12,28 @@ public class BinData {
 	private String numberOfSamples;
 	private String dbmStart;
 	private String dbmEnd;
-	
 	private XYChart.Data<Number, Number> parsed;
-	
+
+	public BinData() {
+		// do nothing
+	}
+
+	public BinData(BinData copy) {
+		this.date = copy.date;
+		this.time = copy.time;
+		this.frequencyStart = copy.frequencyStart;
+		this.frequencyEnd = copy.frequencyEnd;
+		this.binSize = copy.binSize;
+		this.numberOfSamples = copy.numberOfSamples;
+		this.dbmStart = copy.dbmStart;
+		this.dbmEnd = copy.dbmEnd;
+		this.parsed = copy.parsed;
+	}
+
 	public XYChart.Data<Number, Number> getParsed() {
 		return parsed;
 	}
-	
+
 	public void setParsed(XYChart.Data<Number, Number> parsed) {
 		this.parsed = parsed;
 	}

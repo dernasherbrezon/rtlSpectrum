@@ -9,12 +9,12 @@ import java.util.regex.Pattern;
 
 import javafx.scene.chart.XYChart;
 
-public class ReadFromFile extends StatusBarTask<List<BinData>> {
+public class LoadFile extends StatusBarTask<List<BinData>> {
 
 	private static final Pattern COMMA = Pattern.compile(",");
 	private final File file;
 
-	public ReadFromFile(StatusBar statusBar, File file) {
+	public LoadFile(StatusBar statusBar, File file) {
 		super(statusBar);
 		this.file = file;
 	}

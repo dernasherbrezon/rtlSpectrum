@@ -38,7 +38,7 @@ public class RunRtlPower extends Task<List<BinData>> {
 				if (isCancelled()) {
 					break;
 				}
-				BinData cur = ReadFromFile.convert(curLine);
+				BinData cur = LoadFile.convert(curLine);
 				result.add(cur);
 			}
 		}

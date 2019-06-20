@@ -40,8 +40,12 @@ public class Controller implements Initializable {
 	private MenuItem loadFileMenu;
 	@FXML
 	private MenuItem runNowMenu;
+	@FXML
+	private MenuItem addFileMenu;
+	@FXML
+	private MenuItem subtractFileMenu;
 
-	private List<BinData> rawData = new ArrayList<>();
+	private List<List<BinData>> rawData = new ArrayList<>();
 
 	private ExecutorService executorService;
 	private RunRtlPower rtlPowerTask;
@@ -66,7 +70,7 @@ public class Controller implements Initializable {
 			statusBarController.completeTask();
 			welcomeMessage.setVisible(false);
 			disableButtons(false);
-			setupChart(result);
+			setupChart(result, false);
 		});
 		rtlPowerTask.setOnFailed(workerStateEvent -> {
 			progressTask.cancel(true);
@@ -80,36 +84,17 @@ public class Controller implements Initializable {
 
 	@FXML
 	public void loadFile() {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open file");
-		fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV files", "*.csv"));
-		File selectedFile = fileChooser.showOpenDialog(welcomeMessage.getScene().getWindow());
-		if (selectedFile == null) {
-			return;
-		}
+		loadFile(false);
+	}
 
-		disableButtons(true);
-
-		ReadFromFile readTask = new ReadFromFile(statusBarController, selectedFile);
-		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
-		readTask.setOnSucceeded(succeededEvent -> {
-			List<BinData> result = readTask.getValue();
-			statusBarController.completeTask();
-			welcomeMessage.setVisible(false);
-			disableButtons(false);
-			setupChart(result);
-		});
-		readTask.setOnFailed(workerStateEvent -> {
-			disableButtons(false);
-			statusBarController.completeTask("Error: " + readTask.getException().getMessage());
-		});
-
-		executorService.execute(readTask);
+	@FXML
+	public void addFile() {
+		loadFile(true);
 	}
 
 	@FXML
 	public void save() {
-		if (lineChart.getNoData()) {
+		if (lineChart.getNoData() || rawData.isEmpty()) {
 			return;
 		}
 
@@ -123,7 +108,7 @@ public class Controller implements Initializable {
 
 		disableButtons(true);
 
-		SaveTask saveTask = new SaveTask(statusBarController, selectedFile, rawData);
+		SaveTask saveTask = new SaveTask(statusBarController, selectedFile, rawData.get(0));
 		saveTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
 		saveTask.setOnSucceeded(succeededEvent -> {
 			disableButtons(false);
@@ -137,15 +122,90 @@ public class Controller implements Initializable {
 		executorService.execute(saveTask);
 	}
 
-	private void setupChart(List<BinData> data) {
+	@FXML
+	public void clearChart() {
+		lineChart.getData().clear();
+	}
+
+	@FXML
+	public void subtractFile() {
+		File selectedFile = requestFileForOpen();
+		if (selectedFile == null) {
+			return;
+		}
+
+		disableButtons(true);
+
+		SubtractFile task = new SubtractFile(statusBarController, selectedFile, rawData);
+		task.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		task.setOnSucceeded(succeededEvent -> {
+			List<List<BinData>> result = task.getValue();
+			statusBarController.completeTask();
+			disableButtons(false);
+
+			rawData = result;
+			lineChart.getData().clear();
+			for (List<BinData> curGraph : result) {
+				XYChart.Series<Number, Number> series = new XYChart.Series<>();
+				for (BinData cur : curGraph) {
+					series.getData().add(cur.getParsed());
+				}
+				lineChart.getData().add(series);
+			}
+			lineChart.setVisible(true);
+		});
+		task.setOnFailed(workerStateEvent -> {
+			disableButtons(false);
+			statusBarController.completeTask("Error: " + task.getException().getMessage());
+		});
+
+		executorService.execute(task);
+	}
+
+	private void loadFile(boolean append) {
+		File selectedFile = requestFileForOpen();
+		if (selectedFile == null) {
+			return;
+		}
+
+		disableButtons(true);
+
+		LoadFile readTask = new LoadFile(statusBarController, selectedFile);
+		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		readTask.setOnSucceeded(succeededEvent -> {
+			List<BinData> result = readTask.getValue();
+			statusBarController.completeTask();
+			welcomeMessage.setVisible(false);
+			disableButtons(false);
+			setupChart(result, append);
+		});
+		readTask.setOnFailed(workerStateEvent -> {
+			disableButtons(false);
+			statusBarController.completeTask("Error: " + readTask.getException().getMessage());
+		});
+
+		executorService.execute(readTask);
+	}
+
+	private File requestFileForOpen() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open file");
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV files", "*.csv"));
+		return fileChooser.showOpenDialog(welcomeMessage.getScene().getWindow());
+	}
+
+	private void setupChart(List<BinData> data, boolean append) {
 		XYChart.Series<Number, Number> series = new XYChart.Series<>();
 		for (BinData cur : data) {
 			series.getData().add(cur.getParsed());
 		}
-		lineChart.getData().clear();
+		if (!append) {
+			lineChart.getData().clear();
+			rawData = new ArrayList<>();
+		}
+		rawData.add(data);
 		lineChart.getData().add(series);
 		lineChart.setVisible(true);
-		rawData = data;
 	}
 
 	private void disableButtons(boolean value) {
@@ -153,6 +213,8 @@ public class Controller implements Initializable {
 		loadFileButton.setDisable(value);
 		loadFileMenu.setDisable(value);
 		runNowMenu.setDisable(value);
+		addFileMenu.setDisable(value);
+		subtractFileMenu.setDisable(value);
 	}
 
 	public void stop() {
