@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import javafx.scene.chart.XYChart;
 
-public class ReadFromFile extends StatusBarTask<List<XYChart.Data<Number, Number>>> {
+public class ReadFromFile extends StatusBarTask<List<BinData>> {
 
 	private static final Pattern COMMA = Pattern.compile(",");
 	private final File file;
@@ -20,28 +20,44 @@ public class ReadFromFile extends StatusBarTask<List<XYChart.Data<Number, Number
 	}
 
 	@Override
-	protected List<XYChart.Data<Number, Number>> call() throws Exception {
+	protected List<BinData> call() throws Exception {
 		updateMessage("Reading file: " + file.getAbsolutePath());
 		long minimum = 24_000_000;
 		long maximum = 1_700_000_000;
-		ArrayList<XYChart.Data<Number, Number>> result = new ArrayList<>();
+		List<BinData> result = new ArrayList<>();
 		try (BufferedReader r = new BufferedReader(new FileReader(file))) {
 			String curLine = null;
 			while ((curLine = r.readLine()) != null) {
-				XYChart.Data<Number, Number> cur = parse(curLine);
+				BinData cur = convert(curLine);
 				result.add(cur);
-				updateProgress(cur.getXValue().longValue() - minimum, maximum - minimum);
+				updateProgress(cur.getParsed().getXValue().longValue() - minimum, maximum - minimum);
 			}
 		}
 		return result;
 	}
 
 	// format is: 2019-06-07, 19:44:45, 40000000, 41000000, 1000000.00, 1, -24.22, -24.22
-	static XYChart.Data<Number, Number> parse(String line) {
+	static BinData convert(String line) {
 		String[] parts = COMMA.split(line);
-		XYChart.Data<Number, Number> result = new XYChart.Data<>();
-		result.setXValue(Long.valueOf(parts[2].trim()));
-		result.setYValue(Double.valueOf(parts[6].trim()));
+		if (parts.length < 8) {
+			return null;
+		}
+
+		BinData result = new BinData();
+		result.setDate(parts[0].trim());
+		result.setTime(parts[1].trim());
+		result.setFrequencyStart(parts[2].trim());
+		result.setFrequencyEnd(parts[3].trim());
+		result.setBinSize(parts[4].trim());
+		result.setNumberOfSamples(parts[5].trim());
+		result.setDbmStart(parts[6].trim());
+		result.setDbmEnd(parts[7].trim());
+
+		XYChart.Data<Number, Number> parsed = new XYChart.Data<>();
+		parsed.setXValue(Long.valueOf(result.getFrequencyStart()));
+		parsed.setYValue(Double.valueOf(result.getDbmStart()));
+
+		result.setParsed(parsed);
 		return result;
 	}
 }

@@ -2,6 +2,7 @@ package ru.r2cloud.rtlspectrum;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -9,7 +10,6 @@ import java.util.concurrent.Executors;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -22,7 +22,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class Controller implements Initializable {
 
 	@FXML
-	private LineChart<Number, Number> lineChart;
+	private LineChartWithMarkers lineChart;
 
 	@FXML
 	private VBox welcomeMessage;
@@ -40,6 +40,8 @@ public class Controller implements Initializable {
 	private MenuItem loadFileMenu;
 	@FXML
 	private MenuItem runNowMenu;
+
+	private List<BinData> rawData = new ArrayList<>();
 
 	private ExecutorService executorService;
 	private RunRtlPower rtlPowerTask;
@@ -60,7 +62,7 @@ public class Controller implements Initializable {
 		disableButtons(true);
 
 		rtlPowerTask.setOnSucceeded(succeededEvent -> {
-			List<XYChart.Data<Number, Number>> result = rtlPowerTask.getValue();
+			List<BinData> result = rtlPowerTask.getValue();
 			statusBarController.completeTask();
 			welcomeMessage.setVisible(false);
 			disableButtons(false);
@@ -91,7 +93,7 @@ public class Controller implements Initializable {
 		ReadFromFile readTask = new ReadFromFile(statusBarController, selectedFile);
 		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
 		readTask.setOnSucceeded(succeededEvent -> {
-			List<XYChart.Data<Number, Number>> result = readTask.getValue();
+			List<BinData> result = readTask.getValue();
 			statusBarController.completeTask();
 			welcomeMessage.setVisible(false);
 			disableButtons(false);
@@ -105,17 +107,45 @@ public class Controller implements Initializable {
 		executorService.execute(readTask);
 	}
 
-	private void setupChart(List<XYChart.Data<Number, Number>> data) {
-		XYChart.Series<Number, Number> series = new XYChart.Series<>();
-		for (XYChart.Data<Number, Number> cur : data) {
-			series.getData().add(cur);
+	@FXML
+	public void save() {
+		if (lineChart.getNoData()) {
+			return;
 		}
-		lineChart.setLegendVisible(false);
-		lineChart.setAnimated(false);
-		lineChart.setCreateSymbols(false);
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save file");
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV files", "*.csv"));
+		File selectedFile = fileChooser.showSaveDialog(welcomeMessage.getScene().getWindow());
+		if (selectedFile == null) {
+			return;
+		}
+
+		disableButtons(true);
+
+		SaveTask saveTask = new SaveTask(statusBarController, selectedFile, rawData);
+		saveTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		saveTask.setOnSucceeded(succeededEvent -> {
+			disableButtons(false);
+			statusBarController.completeTask();
+		});
+		saveTask.setOnFailed(workerStateEvent -> {
+			disableButtons(false);
+			statusBarController.completeTask("Error: " + saveTask.getException().getMessage());
+		});
+
+		executorService.execute(saveTask);
+	}
+
+	private void setupChart(List<BinData> data) {
+		XYChart.Series<Number, Number> series = new XYChart.Series<>();
+		for (BinData cur : data) {
+			series.getData().add(cur.getParsed());
+		}
 		lineChart.getData().clear();
 		lineChart.getData().add(series);
 		lineChart.setVisible(true);
+		rawData = data;
 	}
 
 	private void disableButtons(boolean value) {

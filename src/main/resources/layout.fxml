@@ -7,6 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.chart.*?>
+<?import javafx.scene.input.*?>
 <?import ru.r2cloud.rtlspectrum.LineChartWithMarkers?>
 
 <BorderPane fx:id="borderPane"
@@ -18,7 +19,8 @@
 				<Menu text="File">
 					<items>
 						<MenuItem text="Run now" onAction="#runNow" fx:id="runNowMenu" />
-						<MenuItem text="Load..." onAction="#loadFile" fx:id="loadFileMenu" />
+						<MenuItem text="Load file..." onAction="#loadFile" fx:id="loadFileMenu" />
+						<MenuItem text="Save" onAction="#save" fx:id="saveMenu" disable="${lineChart.noData}" accelerator="Shortcut+S"/>
 					</items>
 				</Menu>
 			</menus>
@@ -27,7 +29,7 @@
 	<center>
 		<StackPane>
 			<children>
-				<LineChartWithMarkers fx:id="lineChart" visible="false" horizontalZeroLineVisible="false">
+				<LineChartWithMarkers fx:id="lineChart" visible="false" horizontalZeroLineVisible="false" legendVisible="false" animated="false" createSymbols="false">
 		             <xAxis>
 		               <NumberAxis label="Frequency" />
 		             </xAxis>
@@ -39,7 +41,7 @@
 					<Label text="Getting started" style="-fx-font: bold 16pt Arial;"/>
 					<Label text="You can analyze spectrum by running rtl_power using the button below or load .csv file with already collected results" wrapText="true" />
 					<Label text="1. Run now. Make sure rtl_sdr is attached and rtl_power command available in $PATH" wrapText="true" />
-					<Label text="2. Analyze previously collected results. Collect results using the command: rtl_power -f 24M:1.7G:1M -g 1 -1 noise.csv . Load noise.csv file using the button below." wrapText="true" />
+					<Label text="2. Analyze previously collected results. Collect results using the command: rtl_power -f 24M:1.7G:1M -g 1 -i 600 -1 noise.csv . Load noise.csv file using the button below." wrapText="true" />
 					<HBox spacing="8">
 						<Button text="Run now" onAction="#runNow" fx:id="runNowButton" />
 						<Button text="Load file..." onAction="#loadFile" fx:id="loadFileButton" />

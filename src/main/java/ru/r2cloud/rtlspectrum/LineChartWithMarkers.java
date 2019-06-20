@@ -1,8 +1,11 @@
 package ru.r2cloud.rtlspectrum;
 
 import javafx.beans.NamedArg;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -29,6 +32,8 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 	private Text text = new Text();
 	private StringConverter<Number> xConverter;
 	private StringConverter<Number> yConverter;
+
+	private final BooleanProperty noData = new SimpleBooleanProperty(this, "noData", true);
 
 	public LineChartWithMarkers(@NamedArg("xAxis") Axis<Number> xAxis, @NamedArg("yAxis") Axis<Number> yAxis) {
 		super(xAxis, yAxis);
@@ -59,7 +64,6 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 			});
 		}
 		text.setTextAlignment(TextAlignment.JUSTIFY);
-		text.setText("The quick brown fox jumps over the lazy dog");
 
 		final Node chartBackground2 = lookup(".chart-plot-background");
 		final Node chartBackground = lookup(".chart-content");
@@ -107,6 +111,13 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 		getPlotChildren().add(line);
 		getPlotChildren().add(label);
 		getPlotChildren().add(text);
+
+		getData().addListener(new ListChangeListener<Series<Number, Number>>() {
+			@Override
+			public void onChanged(Change<? extends Series<Number, Number>> c) {
+				noData.set(c.getList().isEmpty());
+			}
+		});
 	}
 
 	@Override
@@ -165,5 +176,17 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 			}
 		}
 		return textValue.trim();
+	}
+
+	public BooleanProperty noDataProperty() {
+		return noData;
+	}
+
+	public boolean getNoData() {
+		return noData.get();
+	}
+
+	public void setNoData(boolean value) {
+		noData.set(value);
 	}
 }

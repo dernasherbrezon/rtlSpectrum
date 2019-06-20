@@ -9,9 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import javafx.concurrent.Task;
-import javafx.scene.chart.XYChart;
 
-public class RunRtlPower extends Task<List<XYChart.Data<Number, Number>>> {
+public class RunRtlPower extends Task<List<BinData>> {
 
 	static final long MINIMUM_FREQ = 24_000_000;
 	static final long MAXIMUM_FREQ = 1_700_000_000;
@@ -28,18 +27,18 @@ public class RunRtlPower extends Task<List<XYChart.Data<Number, Number>>> {
 	}
 
 	@Override
-	protected List<XYChart.Data<Number, Number>> call() throws Exception {
+	protected List<BinData> call() throws Exception {
 		updateMessage("Running rtl_power");
 		ProcessBuilder processBuilder = new ProcessBuilder(SPACE.split("rtl_power -f " + MINIMUM_FREQ + ":" + MAXIMUM_FREQ + ":" + STEP + " -i " + NUMBER_OF_SECONDS + " -g 45 -1 -"));
 		process = processBuilder.start();
 		String curLine = null;
-		ArrayList<XYChart.Data<Number, Number>> result = new ArrayList<>();
+		List<BinData> result = new ArrayList<>();
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.ISO_8859_1))) {
 			while ((curLine = r.readLine()) != null && !Thread.currentThread().isInterrupted()) {
 				if (isCancelled()) {
 					break;
 				}
-				XYChart.Data<Number, Number> cur = ReadFromFile.parse(curLine);
+				BinData cur = ReadFromFile.convert(curLine);
 				result.add(cur);
 			}
 		}
