@@ -8,13 +8,20 @@ import javafx.scene.control.ProgressBar;
 
 public class StatusBar {
 
+	public static final String LAST_COMPLETED_TASK = "lastCompletedTask";
+
 	@FXML
 	private ProgressBar progressBar;
 	@FXML
 	private Label statusMessage;
 
-	public void beginTask() {
+	private String taskId;
+
+	public void beginTask(String taskId) {
 		progressBar.setVisible(true);
+		synchronized (this) {
+			this.taskId = taskId;
+		}
 	}
 
 	public void completeTask() {
@@ -31,6 +38,9 @@ public class StatusBar {
 		progressBar.setVisible(false);
 		progressBar.progressProperty().unbind();
 		progressBar.progressProperty().set(-1);
+		synchronized (this) {
+			progressBar.getProperties().put(LAST_COMPLETED_TASK, taskId);
+		}
 	}
 
 	public DoubleProperty progressProperty() {
@@ -40,4 +50,5 @@ public class StatusBar {
 	public StringProperty messageProperty() {
 		return statusMessage.textProperty();
 	}
+
 }

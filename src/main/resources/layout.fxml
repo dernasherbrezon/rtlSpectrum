@@ -14,7 +14,7 @@
 	xmlns:fx="http://javafx.com/fxml"
 	fx:controller="ru.r2cloud.rtlspectrum.Controller">
 	<top>
-		<MenuBar useSystemMenuBar="true">
+		<MenuBar useSystemMenuBar="true" fx:id="menuBar">
 			<menus>
 				<Menu text="File">
 					<items>
@@ -25,7 +25,7 @@
 						<MenuItem text="Save" onAction="#save" fx:id="saveMenu" disable="${lineChart.noData}" accelerator="Shortcut+S"/>
 					</items>
 				</Menu>
-				<Menu text="Edit">
+				<Menu text="Edit" fx:id="editMenu">
 					<items>
 						<MenuItem text="Subtract file..." onAction="#subtractFile" fx:id="subtractFileMenu" />
 						<SeparatorMenuItem/>

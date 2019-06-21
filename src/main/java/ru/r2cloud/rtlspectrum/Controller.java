@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -44,6 +45,8 @@ public class Controller implements Initializable {
 	private MenuItem addFileMenu;
 	@FXML
 	private MenuItem subtractFileMenu;
+	@FXML
+	private MenuBar menuBar;
 
 	private List<List<BinData>> rawData = new ArrayList<>();
 
@@ -55,13 +58,16 @@ public class Controller implements Initializable {
 		executorService = Executors.newFixedThreadPool(2);
 		((NumberAxis) lineChart.getXAxis()).setTickLabelFormatter(new FrequencyFormatter());
 		((NumberAxis) lineChart.getYAxis()).setTickLabelFormatter(new PowerFormatter());
+		if (System.getProperty("testfx.running") != null) {
+			menuBar.setUseSystemMenuBar(false);
+		}
 	}
 
 	@FXML
 	public void runNow() {
 		RtlPowerProgress progressTask = new RtlPowerProgress(statusBarController);
 		rtlPowerTask = new RunRtlPower(progressTask);
-		rtlPowerTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		rtlPowerTask.setOnRunning(succeesesEvent -> statusBarController.beginTask("null"));
 
 		disableButtons(true);
 
@@ -109,7 +115,7 @@ public class Controller implements Initializable {
 		disableButtons(true);
 
 		SaveTask saveTask = new SaveTask(statusBarController, selectedFile, rawData.get(0));
-		saveTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		saveTask.setOnRunning(succeesesEvent -> statusBarController.beginTask(selectedFile.getAbsolutePath()));
 		saveTask.setOnSucceeded(succeededEvent -> {
 			disableButtons(false);
 			statusBarController.completeTask();
@@ -137,7 +143,7 @@ public class Controller implements Initializable {
 		disableButtons(true);
 
 		SubtractFile task = new SubtractFile(statusBarController, selectedFile, rawData);
-		task.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		task.setOnRunning(succeesesEvent -> statusBarController.beginTask(selectedFile.getAbsolutePath()));
 		task.setOnSucceeded(succeededEvent -> {
 			List<List<BinData>> result = task.getValue();
 			statusBarController.completeTask();
@@ -171,7 +177,7 @@ public class Controller implements Initializable {
 		disableButtons(true);
 
 		LoadFile readTask = new LoadFile(statusBarController, selectedFile);
-		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask());
+		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask(selectedFile.getAbsolutePath()));
 		readTask.setOnSucceeded(succeededEvent -> {
 			List<BinData> result = readTask.getValue();
 			statusBarController.completeTask();
@@ -190,6 +196,10 @@ public class Controller implements Initializable {
 	private File requestFileForOpen() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open file");
+		String defaultDirectory = System.getProperty("rtlSpectrum.defaultdirectory");
+		if (defaultDirectory != null) {
+			fileChooser.setInitialDirectory(new File(defaultDirectory));
+		}
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV files", "*.csv"));
 		return fileChooser.showOpenDialog(welcomeMessage.getScene().getWindow());
 	}

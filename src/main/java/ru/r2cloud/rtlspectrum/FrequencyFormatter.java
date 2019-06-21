@@ -21,6 +21,9 @@ public class FrequencyFormatter extends StringConverter<Number> {
 		if (object == null) {
 			return "";
 		}
+		if (object.longValue() < ONE_MEGAHERZ) {
+			return Long.valueOf(object.longValue()) + " hz";
+		}
 		if (object.longValue() < ONE_GIGAHERZ) {
 			return Long.valueOf(object.longValue() / ONE_MEGAHERZ) + " Mhz";
 		}
