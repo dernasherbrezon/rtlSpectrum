@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 public class UITest extends ApplicationTest {
 
 	private static final long TIMEOUT = 100;
-	private static final int MAX_RETRIES = 10000;
+	private static final int MAX_RETRIES = 20;
 
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();

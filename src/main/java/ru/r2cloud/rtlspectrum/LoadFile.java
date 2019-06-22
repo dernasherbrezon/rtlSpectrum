@@ -33,6 +33,7 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 				updateProgress(cur.getParsed().getXValue().longValue() - minimum, maximum - minimum);
 			}
 		}
+		System.out.println("file loaded");
 		return result;
 	}
 
