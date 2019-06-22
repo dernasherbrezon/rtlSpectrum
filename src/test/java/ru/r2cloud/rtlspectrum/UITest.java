@@ -46,7 +46,7 @@ public class UITest extends ApplicationTest {
 			copy(is, fos);
 		}
 		clickOn("#loadFileButton");
-		push(KeyCode.DOWN, KeyCode.ENTER);
+		push(KeyCode.DIGIT1, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 
 		// verify load file
@@ -55,7 +55,7 @@ public class UITest extends ApplicationTest {
 
 		clickOn("#editMenu");
 		clickOn("#subtractFileMenu");
-		push(KeyCode.UP, KeyCode.ENTER);
+		push(KeyCode.DIGIT2, KeyCode.ENTER);
 		waitForCompletion(subtractData.getCanonicalPath());
 
 		// verify subtract file
@@ -67,7 +67,7 @@ public class UITest extends ApplicationTest {
 
 		clickOn("#fileMenu");
 		clickOn("#addFileMenu");
-		push(KeyCode.DOWN, KeyCode.ENTER);
+		push(KeyCode.DIGIT1, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 		// verify add file
 		assertData(expected, file1Data);
@@ -123,7 +123,6 @@ public class UITest extends ApplicationTest {
 			if (taskId != null && taskId.equals(expectedTaskId)) {
 				break;
 			}
-			System.out.println(taskId);
 			try {
 				Thread.sleep(TIMEOUT);
 			} catch (InterruptedException e) {
