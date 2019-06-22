@@ -83,6 +83,7 @@ public class UITest extends ApplicationTest {
 
 	@Override
 	public void start(Stage stage) {
+		System.out.println("start test");
 		System.setProperty("rtlSpectrum.defaultdirectory", tempFolder.getRoot().getAbsolutePath());
 		System.setProperty("testfx.running", "true");
 		Parent root;
@@ -96,6 +97,7 @@ public class UITest extends ApplicationTest {
 		Scene scene = new Scene(root, 640, 480);
 		stage.setScene(scene);
 		stage.show();
+		System.out.println("show stage");
 	}
 
 	@SafeVarargs
