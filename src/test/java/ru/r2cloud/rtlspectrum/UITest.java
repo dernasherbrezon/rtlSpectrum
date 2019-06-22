@@ -45,7 +45,9 @@ public class UITest extends ApplicationTest {
 		try (FileOutputStream fos = new FileOutputStream(testData); InputStream is = UITest.class.getClassLoader().getResourceAsStream("test.csv")) {
 			copy(is, fos);
 		}
+		System.out.println("data loaded");
 		clickOn("#loadFileButton");
+		System.out.println("button clicked");
 		push(KeyCode.DOWN, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 
@@ -71,6 +73,8 @@ public class UITest extends ApplicationTest {
 		waitForCompletion(testData.getCanonicalPath());
 		// verify add file
 		assertData(expected, file1Data);
+		
+		System.out.println("test completed");
 	}
 
 	private static List<XYChart.Data<Number, Number>> expectedDataFromFile1() {
