@@ -7,8 +7,8 @@ import java.util.Locale;
 
 class MacOsUtil {
 
-	static boolean isDark() {
-		ProcessBuilder builder = new ProcessBuilder().command("/usr/bin/defaults", "read", "-g", "AppleInterfaceStyle");
+	static boolean isDark(String command) {
+		ProcessBuilder builder = new ProcessBuilder().command(command, "read", "-g", "AppleInterfaceStyle");
 		Process process;
 		try {
 			process = builder.start();

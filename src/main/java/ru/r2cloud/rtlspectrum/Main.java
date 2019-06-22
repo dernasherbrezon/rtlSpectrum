@@ -27,7 +27,7 @@ public class Main extends Application {
 
 		Scene scene = new Scene(root, 640, 480);
 		String osName = System.getProperty("os.name");
-		if (osName != null && osName.toLowerCase(Locale.UK).contains("mac") && MacOsUtil.isDark()) {
+		if (osName != null && osName.toLowerCase(Locale.UK).contains("mac") && MacOsUtil.isDark("/usr/bin/defaults")) {
 			scene.getStylesheets().add("dark.css");
 		}
 		stage.setScene(scene);
