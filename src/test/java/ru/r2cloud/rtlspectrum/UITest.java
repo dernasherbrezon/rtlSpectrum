@@ -45,9 +45,7 @@ public class UITest extends ApplicationTest {
 		try (FileOutputStream fos = new FileOutputStream(testData); InputStream is = UITest.class.getClassLoader().getResourceAsStream("test.csv")) {
 			copy(is, fos);
 		}
-		System.out.println("data loaded");
 		clickOn("#loadFileButton");
-		System.out.println("button clicked");
 		push(KeyCode.DOWN, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 
@@ -73,8 +71,6 @@ public class UITest extends ApplicationTest {
 		waitForCompletion(testData.getCanonicalPath());
 		// verify add file
 		assertData(expected, file1Data);
-		
-		System.out.println("test completed");
 	}
 
 	private static List<XYChart.Data<Number, Number>> expectedDataFromFile1() {
@@ -87,7 +83,6 @@ public class UITest extends ApplicationTest {
 
 	@Override
 	public void start(Stage stage) {
-		System.out.println("start test");
 		System.setProperty("rtlSpectrum.defaultdirectory", tempFolder.getRoot().getAbsolutePath());
 		System.setProperty("testfx.running", "true");
 		Parent root;
@@ -101,7 +96,6 @@ public class UITest extends ApplicationTest {
 		Scene scene = new Scene(root, 640, 480);
 		stage.setScene(scene);
 		stage.show();
-		System.out.println("show stage");
 	}
 
 	@SafeVarargs
@@ -129,6 +123,7 @@ public class UITest extends ApplicationTest {
 			if (taskId != null && taskId.equals(expectedTaskId)) {
 				break;
 			}
+			System.out.println(taskId);
 			try {
 				Thread.sleep(TIMEOUT);
 			} catch (InterruptedException e) {
