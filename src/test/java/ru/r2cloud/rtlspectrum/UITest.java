@@ -27,7 +27,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
-public class LoadFileTest extends ApplicationTest {
+public class UITest extends ApplicationTest {
 
 	private static final long TIMEOUT = 100;
 	private static final int MAX_RETRIES = 10000;
@@ -38,34 +38,47 @@ public class LoadFileTest extends ApplicationTest {
 	@Test
 	public void loadFile() throws Exception {
 		File subtractData = new File(tempFolder.getRoot(), "2_" + UUID.randomUUID().toString() + ".csv");
-		try (FileOutputStream fos = new FileOutputStream(subtractData); InputStream is = LoadFileTest.class.getClassLoader().getResourceAsStream("subtract.csv")) {
+		try (FileOutputStream fos = new FileOutputStream(subtractData); InputStream is = UITest.class.getClassLoader().getResourceAsStream("subtract.csv")) {
 			copy(is, fos);
 		}
 		File testData = new File(tempFolder.getRoot(), "1_" + UUID.randomUUID().toString() + ".csv");
-		try (FileOutputStream fos = new FileOutputStream(testData); InputStream is = LoadFileTest.class.getClassLoader().getResourceAsStream("test.csv")) {
+		try (FileOutputStream fos = new FileOutputStream(testData); InputStream is = UITest.class.getClassLoader().getResourceAsStream("test.csv")) {
 			copy(is, fos);
 		}
 		clickOn("#loadFileButton");
 		push(KeyCode.DOWN, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 
-		List<XYChart.Data<Number, Number>> expected = new ArrayList<>();
-		expected.add(new Data<Number, Number>(24000000L, -24.14));
-		expected.add(new Data<Number, Number>(25000000L, -24.15));
-		expected.add(new Data<Number, Number>(26000000L, 14.07));
-		assertData(expected);
+		// verify load file
+		List<XYChart.Data<Number, Number>> file1Data = expectedDataFromFile1();
+		assertData(file1Data);
 
 		clickOn("#editMenu");
 		clickOn("#subtractFileMenu");
 		push(KeyCode.UP, KeyCode.ENTER);
 		waitForCompletion(subtractData.getCanonicalPath());
-		
-		expected = new ArrayList<>();
+
+		// verify subtract file
+		List<XYChart.Data<Number, Number>> expected = new ArrayList<>();
 		expected.add(new Data<Number, Number>(24000000L, -2.0));
 		expected.add(new Data<Number, Number>(25000000L, -2.0));
 		expected.add(new Data<Number, Number>(26000000L, 2.0));
 		assertData(expected);
 
+		clickOn("#fileMenu");
+		clickOn("#addFileMenu");
+		push(KeyCode.DOWN, KeyCode.ENTER);
+		waitForCompletion(testData.getCanonicalPath());
+		// verify add file
+		assertData(expected, file1Data);
+	}
+
+	private static List<XYChart.Data<Number, Number>> expectedDataFromFile1() {
+		List<XYChart.Data<Number, Number>> expected = new ArrayList<>();
+		expected.add(new Data<Number, Number>(24000000L, -24.14));
+		expected.add(new Data<Number, Number>(25000000L, -24.15));
+		expected.add(new Data<Number, Number>(26000000L, 14.07));
+		return expected;
 	}
 
 	@Override
@@ -83,19 +96,22 @@ public class LoadFileTest extends ApplicationTest {
 		Scene scene = new Scene(root, 640, 480);
 		stage.setScene(scene);
 		stage.show();
-
 	}
 
-	private void assertData(List<XYChart.Data<Number, Number>> data) {
+	@SafeVarargs
+	private final void assertData(List<XYChart.Data<Number, Number>>... data) {
 		LineChart<Number, Number> chart = lookup("#lineChart").query();
-		assertEquals(1, chart.getData().size());
-		ObservableList<Data<Number, Number>> curSeries = chart.getData().get(0).getData();
-		assertEquals(data.size(), curSeries.size());
-		for (int i = 0; i < data.size(); i++) {
-			Data<Number, Number> expected = data.get(i);
-			Data<Number, Number> actual = curSeries.get(i);
-			assertEquals(expected.getXValue(), actual.getXValue());
-			assertEquals(expected.getYValue(), actual.getYValue());
+		assertEquals(data.length, chart.getData().size());
+		for (int j = 0; j < data.length; j++) {
+			ObservableList<Data<Number, Number>> curSeries = chart.getData().get(j).getData();
+			List<XYChart.Data<Number, Number>> curExpected = data[j];
+			assertEquals(curExpected.size(), curSeries.size());
+			for (int i = 0; i < curExpected.size(); i++) {
+				Data<Number, Number> expected = curExpected.get(i);
+				Data<Number, Number> actual = curSeries.get(i);
+				assertEquals(expected.getXValue(), actual.getXValue());
+				assertEquals(expected.getYValue(), actual.getYValue());
+			}
 		}
 	}
 

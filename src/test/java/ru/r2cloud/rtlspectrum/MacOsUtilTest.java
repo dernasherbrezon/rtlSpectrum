@@ -51,8 +51,8 @@ public class MacOsUtilTest {
 
 	private void setupCommand(String file) throws IOException, FileNotFoundException {
 		command = new File(tempFolder.getRoot(), UUID.randomUUID().toString() + ".sh");
-		try (FileOutputStream fos = new FileOutputStream(command); InputStream is = LoadFileTest.class.getClassLoader().getResourceAsStream(file)) {
-			LoadFileTest.copy(is, fos);
+		try (FileOutputStream fos = new FileOutputStream(command); InputStream is = UITest.class.getClassLoader().getResourceAsStream(file)) {
+			UITest.copy(is, fos);
 		}
 		command.setExecutable(true);
 	}

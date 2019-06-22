@@ -16,7 +16,7 @@
 	<top>
 		<MenuBar useSystemMenuBar="true" fx:id="menuBar">
 			<menus>
-				<Menu text="File">
+				<Menu text="File" fx:id="fileMenu">
 					<items>
 						<MenuItem text="Run now" onAction="#runNow" fx:id="runNowMenu" />
 						<MenuItem text="Load file..." onAction="#loadFile" fx:id="loadFileMenu" />
