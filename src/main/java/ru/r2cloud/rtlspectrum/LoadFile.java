@@ -21,7 +21,6 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 
 	@Override
 	protected List<BinData> call() throws Exception {
-		System.out.println("load file: " + file.getAbsolutePath());
 		updateMessage("Reading file: " + file.getAbsolutePath());
 		long minimum = 24_000_000;
 		long maximum = 1_700_000_000;

@@ -48,10 +48,6 @@ public class UITest extends ApplicationTest {
 		try (FileOutputStream fos = new FileOutputStream(testData); InputStream is = UITest.class.getClassLoader().getResourceAsStream("test.csv")) {
 			copy(is, fos);
 		}
-		File[] files = tempFolder.getRoot().listFiles();
-		for( File cur : files ) {
-			System.out.println(cur.getAbsolutePath());
-		}
 		clickOn("#loadFileButton");
 		push(KeyCode.DIGIT1, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());

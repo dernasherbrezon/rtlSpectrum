@@ -59,10 +59,7 @@ public class Controller implements Initializable {
 		((NumberAxis) lineChart.getXAxis()).setTickLabelFormatter(new FrequencyFormatter());
 		((NumberAxis) lineChart.getYAxis()).setTickLabelFormatter(new PowerFormatter());
 		if (System.getProperty("testfx.running") != null) {
-			System.out.println("system menu bar is off");
 			menuBar.setUseSystemMenuBar(false);
-		} else {
-			System.out.println("system menu bar is on");
 		}
 	}
 
@@ -138,10 +135,8 @@ public class Controller implements Initializable {
 
 	@FXML
 	public void subtractFile() {
-		System.out.println("subtracting load");
 		File selectedFile = requestFileForOpen();
 		if (selectedFile == null) {
-			System.out.println("file is null");
 			return;
 		}
 

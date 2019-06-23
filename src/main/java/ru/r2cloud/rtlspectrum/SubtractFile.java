@@ -21,7 +21,6 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 
 	@Override
 	protected List<List<BinData>> call() throws Exception {
-		System.out.println("subtract: " + file.getAbsolutePath());
 		updateMessage("Reading file: " + file.getAbsolutePath());
 		long minimum = 24_000_000;
 		long maximum = 1_700_000_000;
