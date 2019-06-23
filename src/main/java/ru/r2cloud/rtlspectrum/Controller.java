@@ -135,6 +135,7 @@ public class Controller implements Initializable {
 
 	@FXML
 	public void subtractFile() {
+		System.out.println("subtracting load");
 		File selectedFile = requestFileForOpen();
 		if (selectedFile == null) {
 			System.out.println("file is null");
