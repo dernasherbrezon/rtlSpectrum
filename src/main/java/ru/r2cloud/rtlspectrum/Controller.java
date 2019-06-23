@@ -137,6 +137,7 @@ public class Controller implements Initializable {
 	public void subtractFile() {
 		File selectedFile = requestFileForOpen();
 		if (selectedFile == null) {
+			System.out.println("file is null");
 			return;
 		}
 
