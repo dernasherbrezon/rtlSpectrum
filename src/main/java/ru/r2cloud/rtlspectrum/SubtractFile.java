@@ -60,6 +60,7 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 			}
 			result.add(resultGraph);
 		}
+		System.out.println("subtracted: " + file.getAbsolutePath());
 		return result;
 	}
 
