@@ -9,26 +9,29 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.testfx.framework.junit.ApplicationTest;
-import org.testfx.robot.Motion;
+import org.loadui.testfx.GuiTest;
+
+import com.google.common.collect.Iterables;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
+import javafx.stage.Screen;
 
-public class UITest extends ApplicationTest {
+public class UITest extends GuiTest {
 
 	private static final long TIMEOUT = 100;
 	private static final int MAX_RETRIES = 60;
@@ -50,7 +53,7 @@ public class UITest extends ApplicationTest {
 		for( File cur : files ) {
 			System.out.println(cur.getAbsolutePath());
 		}
-		clickOn("#loadFileButton");
+		click("#loadFileButton");
 		push(KeyCode.DIGIT1, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 
@@ -58,8 +61,9 @@ public class UITest extends ApplicationTest {
 		List<XYChart.Data<Number, Number>> file1Data = expectedDataFromFile1();
 		assertData(file1Data);
 
-		clickOn("#editMenu");
-		clickOn("#subtractFileMenu", Motion.VERTICAL_FIRST);
+		
+		click("#editMenu");
+		click("#subtractFileMenu");
 		push(KeyCode.DIGIT2, KeyCode.ENTER);
 		waitForCompletion(subtractData.getCanonicalPath());
 
@@ -70,8 +74,8 @@ public class UITest extends ApplicationTest {
 		expected.add(new Data<Number, Number>(26000000L, 2.0));
 		assertData(expected);
 
-		clickOn("#fileMenu");
-		clickOn("#addFileMenu", Motion.VERTICAL_FIRST);
+		click("#fileMenu");
+		click("#addFileMenu");
 		push(KeyCode.DIGIT1, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 		// verify add file
@@ -85,9 +89,36 @@ public class UITest extends ApplicationTest {
 		expected.add(new Data<Number, Number>(26000000L, 14.07));
 		return expected;
 	}
-
+	
 	@Override
-	public void start(Stage stage) {
+	public void setupStage() throws Throwable {
+		super.setupStage();
+//		System.setProperty("rtlSpectrum.defaultdirectory", tempFolder.getRoot().getAbsolutePath());
+//		System.setProperty("testfx.running", "true");
+//		Parent root;
+//		try (InputStream is = getClass().getClassLoader().getResourceAsStream("layout.fxml")) {
+//			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("layout.fxml"));
+//			root = fxmlLoader.load(is);
+//		} catch (IOException e) {
+//			throw new IllegalStateException(e);
+//		}
+		
+		double width = 640;
+	    double height = 480;
+
+	    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+	    stage.setX((screenBounds.getWidth() - width) / 2); 
+	    stage.setY((screenBounds.getHeight() - height) / 2);
+	    
+//		Scene scene = new Scene(root, 640, 480);
+//		stage.setScene(scene);
+//		stage.show();
+		
+//		stage.
+	}
+	
+	@Override
+	protected Parent getRootNode() {
 		System.setProperty("rtlSpectrum.defaultdirectory", tempFolder.getRoot().getAbsolutePath());
 		System.setProperty("testfx.running", "true");
 		Parent root;
@@ -97,15 +128,17 @@ public class UITest extends ApplicationTest {
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
+		
+//		Scene scene = new Scene(root, 640, 480);
+//		stage.setScene(scene);
+//		stage.show();
 
-		Scene scene = new Scene(root, 640, 480);
-		stage.setScene(scene);
-		stage.show();
+		return root;
 	}
 
 	@SafeVarargs
 	private final void assertData(List<XYChart.Data<Number, Number>>... data) {
-		LineChart<Number, Number> chart = lookup("#lineChart").query();
+		LineChart<Number, Number> chart = findAny("#lineChart");//.query();
 		assertEquals(data.length, chart.getData().size());
 		for (int j = 0; j < data.length; j++) {
 			ObservableList<Data<Number, Number>> curSeries = chart.getData().get(j).getData();
@@ -121,7 +154,18 @@ public class UITest extends ApplicationTest {
 	}
 
 	private void waitForCompletion(String expectedTaskId) {
-		ProgressBar bar = lookup("#progressBar").query();
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ProgressBar bar;
+		try {
+		bar = findAny("#progressBar");//.query();
+		} catch( Exception e ) {
+			return;
+		}
 		int curRetry = 0;
 		while (curRetry < MAX_RETRIES && !Thread.currentThread().isInterrupted()) {
 			String taskId = (String) bar.getProperties().get(StatusBar.LAST_COMPLETED_TASK);
@@ -137,6 +181,11 @@ public class UITest extends ApplicationTest {
 			curRetry++;
 		}
 		throw new RuntimeException("task did not complete in time: " + expectedTaskId);
+	}
+	
+	private <T extends Node> T findAny(String selector) {
+		Set<Node> result = findAll(selector);
+		return (T)Iterables.getFirst(result, null);
 	}
 
 	public static void copy(InputStream input, OutputStream output) throws IOException {
