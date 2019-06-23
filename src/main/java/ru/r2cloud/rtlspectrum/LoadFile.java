@@ -29,6 +29,9 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 			String curLine = null;
 			while ((curLine = r.readLine()) != null) {
 				BinData cur = convert(curLine);
+				if (cur == null) {
+					continue;
+				}
 				result.add(cur);
 				updateProgress(cur.getParsed().getXValue().longValue() - minimum, maximum - minimum);
 			}

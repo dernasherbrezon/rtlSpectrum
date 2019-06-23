@@ -44,8 +44,8 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 					continue;
 				}
 
-				double dbm1 = Double.valueOf(curBin.getDbmStart());
-				double dbm2 = Double.valueOf(fileBin.getDbmStart());
+				double dbm1 = Double.parseDouble(curBin.getDbmStart());
+				double dbm2 = Double.parseDouble(fileBin.getDbmStart());
 
 				double value = dbm1 - dbm2;
 
