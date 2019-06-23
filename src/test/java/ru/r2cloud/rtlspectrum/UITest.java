@@ -15,6 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.robot.Motion;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -58,7 +59,7 @@ public class UITest extends ApplicationTest {
 		assertData(file1Data);
 
 		clickOn("#editMenu");
-		clickOn("#subtractFileMenu");
+		clickOn("#subtractFileMenu", Motion.VERTICAL_FIRST);
 		push(KeyCode.DIGIT2, KeyCode.ENTER);
 		waitForCompletion(subtractData.getCanonicalPath());
 
@@ -70,7 +71,7 @@ public class UITest extends ApplicationTest {
 		assertData(expected);
 
 		clickOn("#fileMenu");
-		clickOn("#addFileMenu");
+		clickOn("#addFileMenu", Motion.VERTICAL_FIRST);
 		push(KeyCode.DIGIT1, KeyCode.ENTER);
 		waitForCompletion(testData.getCanonicalPath());
 		// verify add file
