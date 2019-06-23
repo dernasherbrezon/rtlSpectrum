@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 public class UITest extends ApplicationTest {
 
 	private static final long TIMEOUT = 100;
-	private static final int MAX_RETRIES = 20;
+	private static final int MAX_RETRIES = 60;
 
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -121,7 +121,7 @@ public class UITest extends ApplicationTest {
 		while (curRetry < MAX_RETRIES && !Thread.currentThread().isInterrupted()) {
 			String taskId = (String) bar.getProperties().get(StatusBar.LAST_COMPLETED_TASK);
 			if (taskId != null && taskId.equals(expectedTaskId)) {
-				break;
+				return;
 			}
 			try {
 				Thread.sleep(TIMEOUT);
@@ -131,6 +131,7 @@ public class UITest extends ApplicationTest {
 			}
 			curRetry++;
 		}
+		throw new RuntimeException("task did not complete in time: " + expectedTaskId);
 	}
 
 	public static void copy(InputStream input, OutputStream output) throws IOException {
