@@ -39,7 +39,7 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 		return result;
 	}
 
-	// format is: 2019-06-07, 19:44:45, 40000000, 41000000, 1000000.00, 1, -24.22, -24.22
+	// format is: 2019-06-07, 19:44:45, 40000000, 41000000, 1000000.00, 1, -24.22, -24.22, ...
 	static BinData convert(String line) {
 		String[] parts = COMMA.split(line);
 		if (parts.length < 8) {
@@ -47,18 +47,26 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 		}
 
 		BinData result = new BinData();
-		result.setDate(parts[0].trim());
-		result.setTime(parts[1].trim());
-		result.setFrequencyStart(parts[2].trim());
-		result.setFrequencyEnd(parts[3].trim());
-		result.setBinSize(parts[4].trim());
-		result.setNumberOfSamples(parts[5].trim());
-		result.setDbmStart(parts[6].trim());
-		result.setDbmEnd(parts[7].trim());
+		int i = 0;
+		result.setDate(parts[i++].trim());
+		result.setTime(parts[i++].trim());
+		result.setFrequencyStart(parts[i++].trim());
+		result.setFrequencyEnd(parts[i++].trim());
+		result.setBinSize(parts[i++].trim());
+		result.setNumberOfSamples(parts[i++].trim());
+		List<String> dbm = new ArrayList<>();
+		double total = 0.0;
+		for (; i < parts.length; i++) {
+			String cur = parts[i].trim();
+			dbm.add(cur);
+			total += Double.valueOf(cur);
+		}
+		result.setDbm(dbm);
+		result.setDbmAverage(total / dbm.size());
 
 		XYChart.Data<Number, Number> parsed = new XYChart.Data<>();
 		parsed.setXValue(Long.valueOf(result.getFrequencyStart()));
-		parsed.setYValue(Double.valueOf(result.getDbmStart()));
+		parsed.setYValue(result.getDbmAverage());
 
 		result.setParsed(parsed);
 		return result;

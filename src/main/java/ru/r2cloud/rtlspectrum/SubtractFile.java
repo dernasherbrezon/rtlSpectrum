@@ -44,8 +44,8 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 					continue;
 				}
 
-				double dbm1 = Double.parseDouble(curBin.getDbmStart());
-				double dbm2 = Double.parseDouble(fileBin.getDbmStart());
+				double dbm1 = curBin.getDbmAverage();
+				double dbm2 = fileBin.getDbmAverage();
 
 				double value = dbm1 - dbm2;
 
@@ -54,7 +54,7 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 				parsed.setYValue(value);
 
 				BinData subtractedBin = new BinData(curBin);
-				subtractedBin.setDbmStart(String.valueOf(value));
+				subtractedBin.setDbmAverage(value);
 				subtractedBin.setParsed(parsed);
 				resultGraph.add(subtractedBin);
 			}
