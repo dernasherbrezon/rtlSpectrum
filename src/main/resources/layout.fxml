@@ -45,6 +45,11 @@
 		             <yAxis>
 		               <NumberAxis label="Power" side="LEFT" />
 		             </yAxis>
+		             <tooltip>
+		             	<VBox style="-fx-background-color: lightgrey; -fx-padding: 5px;" visible="false">
+		             		<Label fx:id="tooltipXLabel" style="-fx-text-fill: black;"/>
+		             	</VBox>
+		             </tooltip>
 				</LineChartWithMarkers>
 				<VBox fx:id="welcomeMessage" spacing="8" maxWidth="400" style="-fx-padding: 100px 0 0 0">
 					<Label text="Getting started" style="-fx-font: bold 16pt Arial;"/>

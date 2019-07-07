@@ -7,11 +7,23 @@ import org.junit.Test;
 public class FrequencyFormatterTest {
 
 	@Test
+	public void formatNegative() {
+		FrequencyFormatter formatter = new FrequencyFormatter();
+		assertEquals("", formatter.toString(-1));
+	}
+	
+	@Test
 	public void formatHz() {
 		FrequencyFormatter formatter = new FrequencyFormatter();
 		assertEquals("10 hz", formatter.toString(10));
 	}
 
+	@Test
+	public void formatKHz() {
+		FrequencyFormatter formatter = new FrequencyFormatter();
+		assertEquals("10.1 Khz", formatter.toString(10100));
+	}
+	
 	@Test
 	public void formatMHz() {
 		FrequencyFormatter formatter = new FrequencyFormatter();

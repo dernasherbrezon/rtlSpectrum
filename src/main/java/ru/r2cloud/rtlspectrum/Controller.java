@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -208,6 +209,7 @@ public class Controller implements Initializable {
 		XYChart.Series<Number, Number> series = new XYChart.Series<>();
 		for (BinData cur : data) {
 			series.getData().add(cur.getParsed());
+			series.setName(UUID.randomUUID().toString());
 		}
 		if (!append) {
 			lineChart.getData().clear();

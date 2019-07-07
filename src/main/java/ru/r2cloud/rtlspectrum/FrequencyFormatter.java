@@ -7,6 +7,7 @@ import javafx.util.StringConverter;
 
 public class FrequencyFormatter extends StringConverter<Number> {
 
+	private static final long ONE_KILOHERZ = 1_000;
 	private static final long ONE_MEGAHERZ = 1_000_000;
 	private static final long ONE_GIGAHERZ = 1_000_000_000;
 
@@ -21,11 +22,17 @@ public class FrequencyFormatter extends StringConverter<Number> {
 		if (object == null) {
 			return "";
 		}
-		if (object.longValue() < ONE_MEGAHERZ) {
+		if (object.longValue() < 0) {
+			return "";
+		}
+		if (object.longValue() < ONE_KILOHERZ) {
 			return Long.valueOf(object.longValue()) + " hz";
 		}
+		if (object.longValue() < ONE_MEGAHERZ) {
+			return format.format(object.doubleValue() / ONE_KILOHERZ) + " Khz";
+		}
 		if (object.longValue() < ONE_GIGAHERZ) {
-			return Long.valueOf(object.longValue() / ONE_MEGAHERZ) + " Mhz";
+			return format.format(object.doubleValue() / ONE_MEGAHERZ) + " Mhz";
 		}
 		return format.format(object.doubleValue() / ONE_GIGAHERZ) + " Ghz";
 	}
