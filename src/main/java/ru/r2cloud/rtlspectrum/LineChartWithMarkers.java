@@ -25,8 +25,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.StringConverter;
 
 public class LineChartWithMarkers extends LineChart<Number, Number> {
@@ -35,7 +33,6 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 	private static final int CURSOR_Y_MARGIN = 20;
 
 	private Line line = new Line();
-	private Text text = new Text();
 	private StringConverter<Number> xConverter;
 	private StringConverter<Number> yConverter;
 
@@ -75,7 +72,6 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 				}
 			});
 		}
-		text.setTextAlignment(TextAlignment.JUSTIFY);
 
 		final Node chartBackground2 = lookup(".chart-plot-background");
 
@@ -135,6 +131,13 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 
 		});
 
+		line.setOnMouseMoved(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				chartBackground2.getOnMouseMoved().handle(mouseEvent);
+			}
+		});
+		
 		getPlotChildren().add(line);
 
 		getData().addListener(new ListChangeListener<Series<Number, Number>>() {

@@ -9,15 +9,17 @@ import javafx.scene.shape.Rectangle;
 public class Legend extends HBox {
 
 	private final Rectangle rectangle = new Rectangle();
-	private final Label label = new Label("test");
+	private final Label label = new Label();
 
 	public Legend() {
-		BorderPane p = new BorderPane();
 		rectangle.setHeight(10.0);
 		rectangle.setWidth(10.0);
-		p.setCenter(rectangle);
+		
 		label.setStyle("-fx-padding: 0; -fx-text-fill: black;");
-		getChildren().add(p);
+
+		BorderPane pane = new BorderPane();
+		pane.setCenter(rectangle);
+		getChildren().add(pane);
 		getChildren().add(label);
 		setSpacing(5.0);
 	}
