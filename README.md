@@ -11,6 +11,9 @@ Analyze spectrograms created by rtl_power
 
 * load from .csv file produced by rtl_power
 * run rtl_power directly. it should be available in the $PATH
+* add multiple graphs for analysis
+* substract one graph from another
+* save/export graph in the rtl_power based format
 
 # Installation
 

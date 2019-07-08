@@ -29,7 +29,7 @@ public class RunRtlPower extends Task<List<BinData>> {
 	@Override
 	protected List<BinData> call() throws Exception {
 		updateMessage("Running rtl_power");
-		ProcessBuilder processBuilder = new ProcessBuilder(SPACE.split("rtl_power -f " + MINIMUM_FREQ + ":" + MAXIMUM_FREQ + ":" + STEP + " -i " + NUMBER_OF_SECONDS + " -g 45 -1 -"));
+		ProcessBuilder processBuilder = new ProcessBuilder(SPACE.split("rtl_power -f " + MINIMUM_FREQ + ":" + MAXIMUM_FREQ + ":" + STEP + " -i " + NUMBER_OF_SECONDS + " -g 0 -c 20% -1 -"));
 		process = processBuilder.start();
 		String curLine = null;
 		List<BinData> result = new ArrayList<>();
