@@ -28,6 +28,10 @@ public class StatusBar {
 		completeTask(null);
 	}
 
+	public void completeError(String message) {
+		completeTask("Error: " + message);
+	}
+
 	public void completeTask(String message) {
 		statusMessage.textProperty().unbind();
 		if (message != null) {

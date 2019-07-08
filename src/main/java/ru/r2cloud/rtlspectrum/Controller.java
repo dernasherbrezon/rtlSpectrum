@@ -81,7 +81,7 @@ public class Controller implements Initializable {
 		});
 		rtlPowerTask.setOnFailed(workerStateEvent -> {
 			progressTask.cancel(true);
-			statusBarController.completeTask("Error: " + rtlPowerTask.getException().getMessage());
+			statusBarController.completeError(rtlPowerTask.getException().getMessage());
 			disableButtons(false);
 		});
 
@@ -123,7 +123,7 @@ public class Controller implements Initializable {
 		});
 		saveTask.setOnFailed(workerStateEvent -> {
 			disableButtons(false);
-			statusBarController.completeTask("Error: " + saveTask.getException().getMessage());
+			statusBarController.completeError(saveTask.getException().getMessage());
 		});
 
 		executorService.execute(saveTask);
@@ -163,7 +163,7 @@ public class Controller implements Initializable {
 		});
 		task.setOnFailed(workerStateEvent -> {
 			disableButtons(false);
-			statusBarController.completeTask("Error: " + task.getException().getMessage());
+			statusBarController.completeError(task.getException().getMessage());
 		});
 
 		executorService.execute(task);
@@ -188,7 +188,7 @@ public class Controller implements Initializable {
 		});
 		readTask.setOnFailed(workerStateEvent -> {
 			disableButtons(false);
-			statusBarController.completeTask("Error: " + readTask.getException().getMessage());
+			statusBarController.completeError(readTask.getException().getMessage());
 		});
 
 		executorService.execute(readTask);

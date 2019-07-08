@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.javafx.scene.control.skin.Utils;
-
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.property.BooleanProperty;
@@ -137,7 +135,7 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 				chartBackground2.getOnMouseMoved().handle(mouseEvent);
 			}
 		});
-		
+
 		getPlotChildren().add(line);
 
 		getData().addListener(new ListChangeListener<Series<Number, Number>>() {
@@ -179,8 +177,15 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 		final double width = getWidth();
 		// copy paste from legend
 		final double legendHeight = snapSize(tooltip.prefHeight(width - left - right));
-		final double legendWidth = Utils.boundedSize(snapSize(tooltip.prefWidth(legendHeight)), 0, width - left - right);
+		final double legendWidth = boundedSize(snapSize(tooltip.prefWidth(legendHeight)), 0, width - left - right);
 		tooltip.resizeRelocate(snapPosition(left), snapPosition(top), legendWidth, legendHeight);
+	}
+
+	private static double boundedSize(double value, double min, double max) {
+		// if max < value, return max
+		// if min > value, return min
+		// if min > max, return min
+		return Math.min(Math.max(value, min), Math.max(min, max));
 	}
 
 	private Map<String, Number> getNearestYValue(Number xValue) {
