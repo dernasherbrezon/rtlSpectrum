@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -119,6 +118,9 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 						continue;
 					}
 					legend.setVisible(true);
+					if (!legend.hasStroke()) {
+						legend.setStroke(((Path) series.getNode().lookup(".chart-series-line")).getStroke());
+					}
 					if (yConverter != null) {
 						legend.setText(yConverter.toString(yValue));
 					} else {
@@ -146,12 +148,6 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 						Legend rec = new Legend();
 						rec.setVisible(false);
 						legendByName.put(cur.getName(), rec);
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								rec.setStroke(((Path) cur.getNode().lookup(".chart-series-line")).getStroke());
-							}
-						});
 						tooltip.getChildren().add(rec);
 					}
 					for (Series<Number, Number> cur : c.getRemoved()) {

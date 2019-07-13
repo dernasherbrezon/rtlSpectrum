@@ -42,7 +42,7 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 	// format is: 2019-06-07, 19:44:45, 40000000, 41000000, 1000000.00, 1, -24.22, -24.22, ...
 	static BinData convert(String line) {
 		String[] parts = COMMA.split(line);
-		if (parts.length < 8) {
+		if (parts.length < 7) {
 			return null;
 		}
 
