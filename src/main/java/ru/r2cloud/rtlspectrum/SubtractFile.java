@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.scene.chart.XYChart;
@@ -56,6 +57,7 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 				BinData subtractedBin = new BinData(curBin);
 				subtractedBin.setDbmAverage(value);
 				subtractedBin.setParsed(parsed);
+				subtractedBin.setDbm(Collections.singletonList(String.valueOf(value)));
 				resultGraph.add(subtractedBin);
 			}
 			result.add(resultGraph);
