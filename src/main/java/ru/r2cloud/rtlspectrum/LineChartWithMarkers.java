@@ -316,9 +316,9 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 		List<Number> xData = null;
 		List<Number> yData = null;
 		if (xa.isAutoRanging())
-			xData = new ArrayList<Number>();
+			xData = new ArrayList<>();
 		if (ya.isAutoRanging())
-			yData = new ArrayList<Number>();
+			yData = new ArrayList<>();
 		if (xData != null || yData != null) {
 			for (Series<Number, Number> series : getData()) {
 				for (Data<Number, Number> data : series.getData()) {

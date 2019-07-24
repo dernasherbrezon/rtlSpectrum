@@ -75,8 +75,12 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 		if (totalValue == null) {
 			totalValue = Double.NaN;
 		}
+		if (totalCount == 0) {
+			result.setDbmAverage(Double.NaN);
+		} else {
+			result.setDbmAverage(totalValue / totalCount);
+		}
 		result.setDbm(dbm);
-		result.setDbmAverage(totalValue / totalCount);
 
 		XYChart.Data<Number, Number> parsed = new XYChart.Data<>();
 		parsed.setXValue(Long.valueOf(result.getFrequencyStart()));
