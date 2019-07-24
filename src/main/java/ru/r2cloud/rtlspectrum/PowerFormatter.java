@@ -15,7 +15,7 @@ public class PowerFormatter extends StringConverter<Number> {
 
 	@Override
 	public String toString(Number object) {
-		if (object == null) {
+		if (object == null || Double.isNaN(object.doubleValue())) {
 			return "";
 		}
 		return format.format(object.doubleValue());

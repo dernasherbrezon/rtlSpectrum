@@ -1,7 +1,10 @@
 package ru.r2cloud.rtlspectrum;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javafx.beans.NamedArg;
@@ -10,6 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -21,7 +25,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.PathElement;
 import javafx.util.StringConverter;
 
 public class LineChartWithMarkers extends LineChart<Number, Number> {
@@ -113,7 +120,7 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 						continue;
 					}
 					Number yValue = yValues.get(series.getName());
-					if (yValue == null) {
+					if (yValue == null || Double.isNaN(yValue.doubleValue())) {
 						legend.setVisible(false);
 						continue;
 					}
@@ -161,6 +168,73 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 				noData.set(c.getList().isEmpty());
 			}
 		});
+	}
+
+	@Override
+	protected void layoutPlotChildren() {
+		List<PathElement> constructedPath = new ArrayList<>(getData().size());
+		for (int seriesIndex = 0; seriesIndex < getData().size(); seriesIndex++) {
+			Series<Number, Number> series = getData().get(seriesIndex);
+			if (series.getNode() instanceof Path) {
+				ObservableList<PathElement> seriesLine = ((Path) series.getNode()).getElements();
+				seriesLine.clear();
+				constructedPath.clear();
+				MoveTo nextMoveTo = null;
+				for (Iterator<Data<Number, Number>> it = getDisplayedDataIterator(series); it.hasNext();) {
+					Data<Number, Number> item = it.next();
+					double x = getXAxis().getDisplayPosition(item.getXValue());
+					double y = getYAxis().getDisplayPosition(getYAxis().toRealValue(getYAxis().toNumericValue(item.getYValue())));
+					if (Double.isNaN(x) || Double.isNaN(y)) {
+						int index = series.getData().indexOf(item);
+						if (index < series.getData().size() - 1) {
+							Data<Number, Number> next = series.getData().get(index + 1);
+							double nextX = getXAxis().getDisplayPosition(next.getXValue());
+							double nextY = getYAxis().getDisplayPosition(getYAxis().toRealValue(getYAxis().toNumericValue(next.getYValue())));
+							nextMoveTo = new MoveTo(nextX, nextY);
+						}
+					} else {
+						if (nextMoveTo != null) {
+							constructedPath.add(nextMoveTo);
+							nextMoveTo = null;
+						}
+						constructedPath.add(new LineTo(x, y));
+						Node symbol = item.getNode();
+						if (symbol != null) {
+							double w = symbol.prefWidth(-1);
+							double h = symbol.prefHeight(-1);
+							symbol.resizeRelocate(x - (w / 2), y - (h / 2), w, h);
+						}
+					}
+				}
+
+				if (!constructedPath.isEmpty()) {
+					PathElement first = constructedPath.get(0);
+					seriesLine.add(new MoveTo(getX(first), getY(first)));
+					seriesLine.addAll(constructedPath);
+				}
+			}
+		}
+
+	}
+
+	private static double getX(PathElement element) {
+		if (element instanceof LineTo) {
+			return ((LineTo) element).getX();
+		} else if (element instanceof MoveTo) {
+			return ((MoveTo) element).getX();
+		} else {
+			throw new IllegalArgumentException(element + " is not a valid type");
+		}
+	}
+
+	private static double getY(PathElement element) {
+		if (element instanceof LineTo) {
+			return ((LineTo) element).getY();
+		} else if (element instanceof MoveTo) {
+			return ((MoveTo) element).getY();
+		} else {
+			throw new IllegalArgumentException(element + " is not a valid type");
+		}
 	}
 
 	@Override
@@ -233,6 +307,36 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 			textValue = xValue.toString();
 		}
 		return textValue.trim();
+	}
+
+	@Override
+	protected void updateAxisRange() {
+		final Axis<Number> xa = getXAxis();
+		final Axis<Number> ya = getYAxis();
+		List<Number> xData = null;
+		List<Number> yData = null;
+		if (xa.isAutoRanging())
+			xData = new ArrayList<Number>();
+		if (ya.isAutoRanging())
+			yData = new ArrayList<Number>();
+		if (xData != null || yData != null) {
+			for (Series<Number, Number> series : getData()) {
+				for (Data<Number, Number> data : series.getData()) {
+					if (xData != null && !Double.isNaN(data.getXValue().doubleValue()))
+						xData.add(data.getXValue());
+					if (yData != null && !Double.isNaN(data.getYValue().doubleValue()))
+						yData.add(data.getYValue());
+				}
+			}
+			// RT-32838 No need to invalidate range if there is one data item - whose value is zero.
+			if (xData != null && !(xData.size() == 1 && getXAxis().toNumericValue(xData.get(0)) == 0)) {
+				xa.invalidateRange(xData);
+			}
+			if (yData != null && !(yData.size() == 1 && getYAxis().toNumericValue(yData.get(0)) == 0)) {
+				ya.invalidateRange(yData);
+			}
+
+		}
 	}
 
 	public BooleanProperty noDataProperty() {

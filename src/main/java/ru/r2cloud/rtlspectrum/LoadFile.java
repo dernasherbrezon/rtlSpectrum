@@ -55,14 +55,28 @@ public class LoadFile extends StatusBarTask<List<BinData>> {
 		result.setBinSize(parts[i++].trim());
 		result.setNumberOfSamples(parts[i++].trim());
 		List<String> dbm = new ArrayList<>();
-		double total = 0.0;
+		Double totalValue = null;
+		int totalCount = 0;
 		for (; i < parts.length; i++) {
 			String cur = parts[i].trim();
 			dbm.add(cur);
-			total += Double.valueOf(cur);
+			try {
+				double curValue = Double.valueOf(cur);
+				if (totalValue == null) {
+					totalValue = curValue;
+				} else {
+					totalValue += curValue;
+				}
+				totalCount++;
+			} catch (NumberFormatException e) {
+				continue;
+			}
+		}
+		if (totalValue == null) {
+			totalValue = Double.NaN;
 		}
 		result.setDbm(dbm);
-		result.setDbmAverage(total / dbm.size());
+		result.setDbmAverage(totalValue / totalCount);
 
 		XYChart.Data<Number, Number> parsed = new XYChart.Data<>();
 		parsed.setXValue(Long.valueOf(result.getFrequencyStart()));
