@@ -9,9 +9,6 @@ addons:
     token:
       secure: "ajg6cm5798rx2DHmwhie9VQko8J6OIiDDRwrOoP1zHLodmcjtJEhtvAnPpSEHjEINunLpOyhVncYpIPiSQW8Fq5L9FMtmDHaQpXPB1RZX24VGEVdB1BjUAQqe1c9FrNHjP7c/UdR6xXUkI83mejTlZI9VgVXpTpfG5geElo/2Ewhl/VsWinRKPDeE9fqdRZrw7eKfrNNOBn9PCqxBTdIsY/ed3eKQBXSdYsM5bIk/VE2UL3v7SYagKP5/B0sDDEbxLps4mVPC57yAx8DFm2LegqwXxh0RXNjnfuyCPLrx7CmP3p5P5Q/oDXaX48/wQd9bqfIxCfnLwaYjHpki8d6XJ85J3DLU5QgqQkUuJjDwvTbs5k1Z8QY5y2gTnEiw9EmAzDbi3NyTjfBwgioULB9I02+vGIv/SNuENxRaODbnGDCdw0071J9TiLGF5bzezAvXDgdGdQD/uGWbaCtaUhzHCbpbgEc7DkEgSmz96rORlR45JB/SBBb0KWi6Cf5I/nwCLsYCNaqI9fricpwU9YfB19YE/xPFY7YirkPHAiQRhL8fgD+u473R/b5PjHpYgQF9nfZG5tZXGRFdaVm4RcVawy1n2MXmiWxg8ZUS3gB5pgErpapH9S4LLk8ESpa/ciPYfMmWcAurv6ziSkdnh7oE8zgNodFDt/StHRrxeEndV4="
 
-before_install:
-  - export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start
-
 install: true
 
 script:
