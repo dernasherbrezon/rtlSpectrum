@@ -17,7 +17,7 @@ Analyze spectrograms created by rtl_power
 
 # Installation
 
-* Ensure you have java installed. Required version is 1.8+
+* Ensure you have java installed. Required version is Java 11+
 * Go to [Releases](https://github.com/dernasherbrezon/rtlSpectrum/releases) tab
 * Download the latest .jar file
 * Run it using the command ```java -jar rtlSpectrum.jar```
