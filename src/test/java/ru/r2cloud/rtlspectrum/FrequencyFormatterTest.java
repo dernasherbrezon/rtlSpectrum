@@ -15,25 +15,25 @@ public class FrequencyFormatterTest {
 	@Test
 	public void formatHz() {
 		FrequencyFormatter formatter = new FrequencyFormatter();
-		assertEquals("10 hz", formatter.toString(10));
+		assertEquals("10 Hz", formatter.toString(10));
 	}
 
 	@Test
 	public void formatKHz() {
 		FrequencyFormatter formatter = new FrequencyFormatter();
-		assertEquals("10.1 Khz", formatter.toString(10100));
+		assertEquals("10.1 KHz", formatter.toString(10100));
 	}
 	
 	@Test
 	public void formatMHz() {
 		FrequencyFormatter formatter = new FrequencyFormatter();
-		assertEquals("10 Mhz", formatter.toString(10_001_000));
+		assertEquals("10 MHz", formatter.toString(10_001_000));
 	}
 	
 	@Test
 	public void formatGHz() {
 		FrequencyFormatter formatter = new FrequencyFormatter();
-		assertEquals("10.1 Ghz", formatter.toString(10_101_000_000L));
+		assertEquals("10.1 GHz", formatter.toString(10_101_000_000L));
 	}
 	
 }
