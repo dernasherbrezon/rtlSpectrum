@@ -26,15 +26,15 @@ public class FrequencyFormatter extends StringConverter<Number> {
 			return "";
 		}
 		if (object.longValue() < ONE_KILOHERZ) {
-			return Long.valueOf(object.longValue()) + " hz";
+			return Long.valueOf(object.longValue()) + " Hz";
 		}
 		if (object.longValue() < ONE_MEGAHERZ) {
-			return format.format(object.doubleValue() / ONE_KILOHERZ) + " Khz";
+			return format.format(object.doubleValue() / ONE_KILOHERZ) + " KHz";
 		}
 		if (object.longValue() < ONE_GIGAHERZ) {
-			return format.format(object.doubleValue() / ONE_MEGAHERZ) + " Mhz";
+			return format.format(object.doubleValue() / ONE_MEGAHERZ) + " MHz";
 		}
-		return format.format(object.doubleValue() / ONE_GIGAHERZ) + " Ghz";
+		return format.format(object.doubleValue() / ONE_GIGAHERZ) + " GHz";
 	}
 
 	@Override
