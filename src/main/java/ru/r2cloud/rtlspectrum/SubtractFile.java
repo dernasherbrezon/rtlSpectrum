@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javafx.scene.chart.XYChart;
@@ -23,25 +22,22 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 	@Override
 	protected List<List<BinData>> call() throws Exception {
 		updateMessage("Reading file: " + file.getAbsolutePath());
-		long minimum = 24_000_000;
-		long maximum = 1_700_000_000;
-		List<BinData> fileData = new ArrayList<>();
+		BinDataParser parser = new BinDataParser();
 		try (BufferedReader r = new BufferedReader(new FileReader(file))) {
 			String curLine = null;
 			while ((curLine = r.readLine()) != null) {
-				BinData cur = LoadFile.convert(curLine);
-				fileData.add(cur);
-				updateProgress(cur.getParsed().getXValue().longValue() - minimum, maximum - minimum);
+				parser.addLine(curLine);
 			}
 		}
+		List<BinData> fileData = parser.convert();
 		List<List<BinData>> result = new ArrayList<>();
 		for (List<BinData> cur : rawData) {
 			List<BinData> resultGraph = new ArrayList<>();
 			for (BinData curBin : cur) {
 				BinData fileBin = findByFrequency(fileData, curBin.getFrequencyStart());
 				if (fileBin == null) {
-					// copy parsed as well
-					resultGraph.add(new BinData(curBin));
+					// ignore missing buckets. They might contain NaN or mismatched frequencies.
+					// keep only relevant buckets in the chart
 					continue;
 				}
 
@@ -51,13 +47,14 @@ public class SubtractFile extends StatusBarTask<List<List<BinData>>> {
 				double value = dbm1 - dbm2;
 
 				XYChart.Data<Number, Number> parsed = new XYChart.Data<>();
-				parsed.setXValue(Long.valueOf(curBin.getFrequencyStart()));
+				parsed.setXValue(curBin.getFrequencyStartParsed());
 				parsed.setYValue(value);
 
 				BinData subtractedBin = new BinData(curBin);
 				subtractedBin.setDbmAverage(value);
+				subtractedBin.setDbmTotal(value);
+				subtractedBin.setDbmCount(1);
 				subtractedBin.setParsed(parsed);
-				subtractedBin.setDbm(Collections.singletonList(String.valueOf(value)));
 				resultGraph.add(subtractedBin);
 			}
 			result.add(resultGraph);

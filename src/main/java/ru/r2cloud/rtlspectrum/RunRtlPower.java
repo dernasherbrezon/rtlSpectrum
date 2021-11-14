@@ -3,7 +3,6 @@ package ru.r2cloud.rtlspectrum;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -32,14 +31,13 @@ public class RunRtlPower extends Task<List<BinData>> {
 		ProcessBuilder processBuilder = new ProcessBuilder(SPACE.split("rtl_power -f " + MINIMUM_FREQ + ":" + MAXIMUM_FREQ + ":" + STEP + " -i " + NUMBER_OF_SECONDS + " -g 0 -c 20% -1 -"));
 		process = processBuilder.start();
 		String curLine = null;
-		List<BinData> result = new ArrayList<>();
+		BinDataParser parser = new BinDataParser();
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.ISO_8859_1))) {
 			while ((curLine = r.readLine()) != null && !Thread.currentThread().isInterrupted()) {
 				if (isCancelled()) {
 					break;
 				}
-				BinData cur = LoadFile.convert(curLine);
-				result.add(cur);
+				parser.addLine(curLine);
 			}
 		}
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getErrorStream(), StandardCharsets.ISO_8859_1))) {
@@ -59,7 +57,7 @@ public class RunRtlPower extends Task<List<BinData>> {
 			}
 		}
 		progressTask.cancel(true);
-		return result;
+		return parser.convert();
 	}
 
 	@Override

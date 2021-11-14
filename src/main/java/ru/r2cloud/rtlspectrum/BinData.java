@@ -1,8 +1,5 @@
 package ru.r2cloud.rtlspectrum;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.scene.chart.XYChart;
 
 public class BinData {
@@ -10,12 +7,15 @@ public class BinData {
 	private String date;
 	private String time;
 	private String frequencyStart;
+	private long frequencyStartParsed;
 	private String frequencyEnd;
 	private String binSize;
 	private String numberOfSamples;
-	private List<String> dbm;
 	private XYChart.Data<Number, Number> parsed;
 	private double dbmAverage;
+
+	private double dbmTotal;
+	private int dbmCount;
 
 	public BinData() {
 		// do nothing
@@ -25,12 +25,38 @@ public class BinData {
 		this.date = copy.date;
 		this.time = copy.time;
 		this.frequencyStart = copy.frequencyStart;
+		this.frequencyStartParsed = copy.frequencyStartParsed;
 		this.frequencyEnd = copy.frequencyEnd;
 		this.binSize = copy.binSize;
 		this.numberOfSamples = copy.numberOfSamples;
-		this.dbm = new ArrayList<>(copy.dbm);
 		this.parsed = copy.parsed;
 		this.dbmAverage = copy.dbmAverage;
+		this.dbmTotal = copy.dbmTotal;
+		this.dbmCount = copy.dbmCount;
+	}
+
+	public long getFrequencyStartParsed() {
+		return frequencyStartParsed;
+	}
+
+	public void setFrequencyStartParsed(long frequencyStartParsed) {
+		this.frequencyStartParsed = frequencyStartParsed;
+	}
+
+	public int getDbmCount() {
+		return dbmCount;
+	}
+
+	public void setDbmCount(int dbmCount) {
+		this.dbmCount = dbmCount;
+	}
+
+	public double getDbmTotal() {
+		return dbmTotal;
+	}
+
+	public void setDbmTotal(double dbmTotal) {
+		this.dbmTotal = dbmTotal;
 	}
 
 	public XYChart.Data<Number, Number> getParsed() {
@@ -89,18 +115,10 @@ public class BinData {
 		this.numberOfSamples = numberOfSamples;
 	}
 
-	public List<String> getDbm() {
-		return dbm;
-	}
-
-	public void setDbm(List<String> dbm) {
-		this.dbm = dbm;
-	}
-	
 	public void setDbmAverage(double dbmAverage) {
 		this.dbmAverage = dbmAverage;
 	}
-	
+
 	public double getDbmAverage() {
 		return dbmAverage;
 	}

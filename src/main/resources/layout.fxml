@@ -40,10 +40,10 @@
 			<children>
 				<LineChartWithMarkers fx:id="lineChart" visible="false" horizontalZeroLineVisible="false" legendVisible="false" animated="false" createSymbols="false">
 		             <xAxis>
-		               <NumberAxis label="Frequency" />
+		               <NumberAxis label="Frequency" autoRanging="true" />
 		             </xAxis>
 		             <yAxis>
-		               <NumberAxis label="Power" side="LEFT" />
+		               <NumberAxis label="Power" side="LEFT" autoRanging="true" />
 		             </yAxis>
 		             <tooltip>
 		             	<VBox style="-fx-background-color: lightgrey; -fx-padding: 5px;" visible="false">

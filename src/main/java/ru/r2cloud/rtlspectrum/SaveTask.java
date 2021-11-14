@@ -25,9 +25,7 @@ public class SaveTask extends StatusBarTask<Void> {
 				w.append(cur.getDate()).append(',').append(cur.getTime()).append(',').append(cur.getFrequencyStart());
 				w.append(',').append(cur.getFrequencyEnd()).append(',').append(cur.getBinSize()).append(',');
 				w.append(cur.getNumberOfSamples());
-				for (String curDbm : cur.getDbm()) {
-					w.append(',').append(curDbm);
-				}
+				w.append(',').append(String.valueOf(cur.getDbmAverage()));
 				w.append('\n');
 				updateProgress(i, data.size());
 			}

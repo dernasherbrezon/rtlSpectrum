@@ -57,6 +57,7 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 
 		if (xAxis instanceof NumberAxis) {
 			NumberAxis numberedXAxis = (NumberAxis) xAxis;
+			numberedXAxis.setForceZeroInRange(false);
 			xConverter = numberedXAxis.getTickLabelFormatter();
 			numberedXAxis.tickLabelFormatterProperty().addListener(new ChangeListener<StringConverter<Number>>() {
 				@Override
@@ -246,9 +247,9 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 		double right = snappedRightInset();
 		final double width = getWidth();
 		// copy paste from legend
-		final double legendHeight = snapSize(tooltip.prefHeight(width - left - right));
-		final double legendWidth = boundedSize(snapSize(tooltip.prefWidth(legendHeight)), 0, width - left - right);
-		tooltip.resizeRelocate(snapPosition(left), snapPosition(top), legendWidth, legendHeight);
+		final double legendHeight = snapSizeX(tooltip.prefHeight(width - left - right));
+		final double legendWidth = boundedSize(snapSizeX(tooltip.prefWidth(legendHeight)), 0, width - left - right);
+		tooltip.resizeRelocate(snapPositionX(left), snapPositionX(top), legendWidth, legendHeight);
 	}
 
 	private static double boundedSize(double value, double min, double max) {
@@ -328,7 +329,8 @@ public class LineChartWithMarkers extends LineChart<Number, Number> {
 						yData.add(data.getYValue());
 				}
 			}
-			// RT-32838 No need to invalidate range if there is one data item - whose value is zero.
+			// RT-32838 No need to invalidate range if there is one data item - whose value
+			// is zero.
 			if (xData != null && !(xData.size() == 1 && getXAxis().toNumericValue(xData.get(0)) == 0)) {
 				xa.invalidateRange(xData);
 			}
