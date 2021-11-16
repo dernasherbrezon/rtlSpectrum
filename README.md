@@ -1,4 +1,4 @@
-# rtlSpectrum [![Build Status](https://travis-ci.com/dernasherbrezon/rtlSpectrum.svg?branch=master)](https://travis-ci.com/dernasherbrezon/rtlSpectrum) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ru.r2cloud%3ArtlSpectrum&metric=alert_status)](https://sonarcloud.io/dashboard?id=ru.r2cloud%3ArtlSpectrum)
+# rtlSpectrum [![Build Status](https://app.travis-ci.com/dernasherbrezon/rtlSpectrum.svg?branch=master)](https://app.travis-ci.com/github/dernasherbrezon/rtlSpectrum) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ru.r2cloud%3ArtlSpectrum&metric=alert_status)](https://sonarcloud.io/dashboard?id=ru.r2cloud%3ArtlSpectrum)
 
 Analyze spectrograms created by rtl_power
 
