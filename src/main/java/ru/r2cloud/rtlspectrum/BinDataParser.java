@@ -18,7 +18,7 @@ public class BinDataParser {
 
 	public void addLine(String line) {
 		Map<String, BinData> cur = convertLine(line);
-		if (cur == null) {
+		if (cur.isEmpty()) {
 			return;
 		}
 		for (Entry<String, BinData> curEntry : cur.entrySet()) {
@@ -57,7 +57,7 @@ public class BinDataParser {
 	static Map<String, BinData> convertLine(String line) {
 		String[] parts = COMMA.split(line);
 		if (parts.length < 7) {
-			return null;
+			return Collections.emptyMap();
 		}
 		String date = parts[0].trim();
 		String time = parts[1].trim();

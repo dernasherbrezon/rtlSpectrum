@@ -10,7 +10,7 @@ public abstract class StatusBarTask<V> extends Task<V> {
 	private final SimpleDateFormat sdf = new SimpleDateFormat("mm'm':ss's'");
 	protected final StatusBar statusBar;
 
-	public StatusBarTask(StatusBar statusBar) {
+	protected StatusBarTask(StatusBar statusBar) {
 		this.statusBar = statusBar;
 		this.statusBar.progressProperty().bind(progressProperty());
 		this.statusBar.messageProperty().bind(messageProperty());

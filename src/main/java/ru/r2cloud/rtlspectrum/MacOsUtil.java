@@ -16,8 +16,12 @@ class MacOsUtil {
 			if (resultCode != 0) {
 				return false;
 			}
-		} catch (Exception e1) {
+		} catch (InterruptedException e1) {
+			Thread.currentThread().interrupt();
 			e1.printStackTrace();
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.ISO_8859_1))) {
