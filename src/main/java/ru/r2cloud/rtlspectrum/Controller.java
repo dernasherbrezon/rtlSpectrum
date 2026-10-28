@@ -94,6 +94,18 @@ public class Controller implements Initializable {
 		loadFile(false);
 	}
 
+	public void loadFileDirect(File file) {
+		loadFileWithFile(file, false);
+	}
+
+	public void addFileDirect(File file) {
+		loadFileWithFile(file, true);
+	}
+
+	public void subtractFileDirect(File file) {
+		subtractFileWithFile(file);
+	}
+
 	@FXML
 	public void addFile() {
 		loadFile(true);
@@ -140,11 +152,14 @@ public class Controller implements Initializable {
 		if (selectedFile == null) {
 			return;
 		}
+		subtractFileWithFile(selectedFile);
+	}
 
+	private void subtractFileWithFile(File file) {
 		disableButtons(true);
 
-		SubtractFile task = new SubtractFile(statusBarController, selectedFile, rawData);
-		task.setOnRunning(succeesesEvent -> statusBarController.beginTask(selectedFile.getAbsolutePath()));
+		SubtractFile task = new SubtractFile(statusBarController, file, rawData);
+		task.setOnRunning(succeesesEvent -> statusBarController.beginTask(file.getAbsolutePath()));
 		task.setOnSucceeded(succeededEvent -> {
 			List<List<BinData>> result = task.getValue();
 			statusBarController.completeTask();
@@ -174,11 +189,14 @@ public class Controller implements Initializable {
 		if (selectedFile == null) {
 			return;
 		}
+		loadFileWithFile(selectedFile, append);
+	}
 
+	private void loadFileWithFile(File file, boolean append) {
 		disableButtons(true);
 
-		LoadFile readTask = new LoadFile(statusBarController, selectedFile);
-		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask(selectedFile.getAbsolutePath()));
+		LoadFile readTask = new LoadFile(statusBarController, file);
+		readTask.setOnRunning(succeesesEvent -> statusBarController.beginTask(file.getAbsolutePath()));
 		readTask.setOnSucceeded(succeededEvent -> {
 			List<BinData> result = readTask.getValue();
 			statusBarController.completeTask();

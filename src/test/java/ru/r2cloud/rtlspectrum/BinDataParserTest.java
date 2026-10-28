@@ -1,6 +1,7 @@
 package ru.r2cloud.rtlspectrum;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -31,6 +32,24 @@ public class BinDataParserTest {
 		assertEquals(2, result.size());
 		assertBinData(result.get(0), "433006", -45.0);
 		assertBinData(result.get(1), "433064", -45.0);
+	}
+
+	@Test
+	public void testMalformedFrequencyStartIsIgnored() {
+		parser.addLine("2021-11-14, 20:27:18, notanumber, 435994, 58.59, 342414, -27.70");
+		assertTrue(parser.convert().isEmpty());
+	}
+
+	@Test
+	public void testMalformedStepIsIgnored() {
+		parser.addLine("2021-11-14, 20:27:18, 433006, 435994, notastep, 342414, -27.70");
+		assertTrue(parser.convert().isEmpty());
+	}
+
+	@Test
+	public void testTooFewPartsIsIgnored() {
+		parser.addLine("2021-11-14, 20:27:18, 433006");
+		assertTrue(parser.convert().isEmpty());
 	}
 
 	private static void assertBinData(BinData actual, String frequencyStart, double value) {
