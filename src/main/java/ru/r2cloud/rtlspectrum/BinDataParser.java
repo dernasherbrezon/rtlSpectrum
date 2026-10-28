@@ -61,8 +61,14 @@ public class BinDataParser {
 		}
 		String date = parts[0].trim();
 		String time = parts[1].trim();
-		long frequencyStart = Long.parseLong(parts[2].trim());
-		double step = Double.parseDouble(parts[4].trim());
+		long frequencyStart;
+		double step;
+		try {
+			frequencyStart = Long.parseLong(parts[2].trim());
+			step = Double.parseDouble(parts[4].trim());
+		} catch (NumberFormatException e) {
+			return Collections.emptyMap();
+		}
 		Map<String, BinData> result = new HashMap<>();
 		for (int i = 0; i < parts.length - 7 + 1; i++) {
 			BinData cur = new BinData();
